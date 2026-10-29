@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mike Anderson — Product Designer</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Mike Anderson is a product designer in San Francisco, currently building a new model of healthcare at Midi Health.">
+<link rel="icon" type="image/png" href="source-images/favicon.png">
+<link rel="stylesheet" href="styles/fonts.css">
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/site.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <a class="logotype" href="./">Mike Anderson <span aria-hidden="true">|</span> Product Designer</a>
+</header>
+
+<main id="main">
+
+  <nav class="site-nav" id="site-nav" aria-label="Sections">
+    <div class="site-nav__links">
+      <a class="btn btn--ghost" href="#hello">Hello</a>
+      <a class="btn btn--ghost" href="#skills">Skills</a>
+      <a class="btn btn--ghost" href="#about">About</a>
+    </div>
+
+    <button class="site-nav__disclosure" type="button"
+            popovertarget="nav-sections" aria-expanded="false">
+      Sections
+      <svg viewBox="0 0 12 8" aria-hidden="true" focusable="false">
+        <path d="M1 1.5 6 6.5l5-5" fill="none" stroke="currentColor" stroke-width="1.75"/>
+      </svg>
+    </button>
+
+    <a class="btn btn--solid btn--avatar" href="#contact">
+      Contact Mike
+      <span class="btn__dec" aria-hidden="true"></span>
+    </a>
+
+    <div class="nav-popover" id="nav-sections" popover>
+      <a href="#hello">Hello</a>
+      <a href="#skills">Skills</a>
+      <a href="#about">About</a>
+    </div>
+  </nav>
+
+  <!-- ─── hero ─────────────────────────────────────────── -->
+  <section class="hero" id="hello">
+    <video class="hero__media" autoplay loop muted playsinline
+           poster="source-images/index-1b-poster.jpg" aria-hidden="true">
+      <source src="source-images/index-hero-portrait.mp4" type="video/mp4" media="(max-width: 750px)">
+      <source src="source-images/index-1b.mp4" type="video/mp4">
+    </video>
+    <img class="hero__still" src="source-images/index-1b-poster.jpg" alt="" aria-hidden="true">
+
+    <div class="hero__intro">
+      <h1 class="hero__heading">I&rsquo;m a strategic designer who defines product vision, drives stakeholder alignment, and executes with pixel-perfect precision.</h1>
+      <p class="hero__currently"><em>Currently:</em> Building a new model of healthcare at Midi Health</p>
+      <p class="hero__actions"><a class="btn btn--solid" href="#contact">Contact Mike</a></p>
+    </div>
+
+    <a class="scroll-cue" href="#skills" aria-label="Scroll to skills">
+      <svg viewBox="0 0 13 26" aria-hidden="true" focusable="false">
+        <path d="M6.5 0v24M1 18.5l5.5 6 5.5-6" fill="none" stroke="currentColor" stroke-width="2"/>
+      </svg>
+    </a>
+  </section>
+
+  <!-- ─── skills ───────────────────────────────────────── -->
+  <section class="sheet skills" id="skills">
+    <p class="eyebrow-chip">Skills</p>
+    <h2 class="section-heading">I turn cross-functional friction into clearly-defined MVPs. Having worked across visual design, copy, and code, I speak the language of every team at the table.</h2>
+
+    <ul class="card-grid">
+      <li class="card">
+        <p class="card__eyebrow">UI Design</p>
+        <h3 class="card__heading">Form meets function.</h3>
+        <img class="card__media" src="img/card-ui.png" alt="Redline spec of a Midi web page with a token rail, spacing scale and component selection." loading="lazy" width="580" height="340">
+      </li>
+      <li class="card">
+        <p class="card__eyebrow">Prototyping</p>
+        <h3 class="card__heading">Make it real, learn faster: I prototype in code and Figma so my team can test quickly.</h3>
+        <img class="card__media" src="img/card-prototyping.png" alt="A three-step prototype flow with an interaction spec panel." loading="lazy" width="500" height="240">
+      </li>
+      <li class="card">
+        <p class="card__eyebrow">Content Design</p>
+        <h3 class="card__heading">As a former writer, my visual work is the bridge between copy and graphics.</h3>
+        <img class="card__media" src="img/card-content.png" alt="A sticky note of redacted copy with an arrow pointing at a web page." loading="lazy" width="580" height="340">
+      </li>
+      <li class="card">
+        <p class="card__eyebrow">Design Systems</p>
+        <h3 class="card__heading">I replace one-off design elements with scalable, reusable UI patterns.</h3>
+        <img class="card__media" src="img/card-design-systems.png" alt="A design system interface showing colour tokens in light and dark modes." loading="lazy" width="500" height="240">
+      </li>
+      <li class="card card--wide">
+        <p class="card__eyebrow">User Research</p>
+        <h3 class="card__heading">Listen first, design second.</h3>
+        <img class="card__media" src="img/card-user-research.png" alt="A research board with participant cohorts across mock, alpha and beta." loading="lazy" width="500" height="240">
+      </li>
+    </ul>
+  </section>
+
+  <!-- ─── about ────────────────────────────────────────── -->
+  <section class="sheet about" id="about" data-theme="dark">
+    <p class="eyebrow-chip eyebrow-chip--bare">About</p>
+    <h2 class="section-heading">I&rsquo;m a driven, gentle, and empathetic Midwesterner based in San Francisco&rsquo;s Bernal Heights.</h2>
+
+    <div class="carousel" data-carousel>
+      <div class="carousel__viewport">
+        <article class="slide is-current">
+          <p class="slide__copy">I&rsquo;m a Senior Product Designer at Midi Health, where I&rsquo;ve shaped how patients access care and how clinicians deliver it. I&rsquo;ve worked across patient experiences, internal tools, and the design system connecting them.</p>
+          <img class="slide__media" src="img/about-product.png" alt="Midi product surfaces: web, desktop app and mobile." loading="lazy">
+        </article>
+        <article class="slide">
+          <p class="slide__copy">I&rsquo;m as comfortable on a team as I am on my own. For my first eighteen months at Midi I was the only product designer: research, product direction, UI &mdash; whatever the week needed.</p>
+          <img class="slide__media" src="img/about-endtoend.png" alt="One designer across research, direction and interface." loading="lazy">
+        </article>
+        <article class="slide">
+          <p class="slide__copy">Before healthcare: I worked in fintech at Landed, launched a fashion startup with two co-founders, and freelanced for Mazda, Initialized and Bobbie.</p>
+          <img class="slide__media" src="img/about-clients.png" alt="Selected clients: Mazda, Initialized, Bobbie, Landed, Acaso and Pandora." loading="lazy">
+        </article>
+        <article class="slide">
+          <p class="slide__copy">I&rsquo;m the &ldquo;glue&rdquo; on every team I join. So, when one question has four answers in four documents, turning them into a single idea feels less like process and more like a conversation I&rsquo;m already in.</p>
+          <img class="slide__media" src="img/about-convergence.png" alt="Four teams' findings converging into one narrative." loading="lazy">
+        </article>
+      </div>
+
+      <div class="carousel__controls">
+        <button class="carousel__arrow" data-prev aria-label="Previous slide">
+          <svg viewBox="0 0 26 13" aria-hidden="true"><path d="M26 6.5H1M7 1 1 6.5 7 12" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        </button>
+        <button class="carousel__arrow carousel__arrow--next" data-next aria-label="Next slide">
+          <svg viewBox="0 0 26 13" aria-hidden="true"><path d="M0 6.5h25M19 1l6 5.5-6 5.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        </button>
+        <div class="carousel__dots" role="tablist" aria-label="Choose slide"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer" id="contact">
+  <dl class="footer-meta">
+    <div><dt>Copyright</dt><dd>&copy; 2026</dd></div>
+    <div><dt>Made in San Francisco</dt><dd>HTML &amp; CSS written by me</dd></div>
+    <div><dt>Get in touch</dt><dd><a href="mailto:mikeandersondesigner@gmail.com">Email Mike</a></dd></div>
+  </dl>
+</footer>
+
+<script src="scripts/site.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+/* Generated from the Figma "My Work" variable collections. Regenerate rather than hand-edit. */
+:root {
+  /* primitives */
+  --primitive-black: #000000;
+  --primitive-white: #FFFFFF;
+  --primitive-off-white: #FCFBFB;
+  --primitive-blue-500: #6086C5;
+  --primitive-blue-300: #72B3FF;
+  --primitive-warm-900: #45423C;
+  --primitive-grey-600: #555555;
+  --primitive-grey-500: #7F8C8D;
+  --primitive-grey-300: #A1A1A1;
+  --primitive-grey-100: #ECECEC;
+  --primitive-blue-050: #EDF2FA;
+  --primitive-blue-700: #4E74AE;
+  --primitive-grey-950: #1F1F1F;
+  --primitive-blue-400: #6385B8;
+  --primitive-dusk-050: #F3F0FB;
+  --primitive-dusk-100: #E5DFF7;
+  --primitive-dusk-200: #C8C7E2;
+  --primitive-dusk-600: #6144B2;
+  --primitive-dusk-800: #3B2A6E;
+  --primitive-dusk-900: #1A1326;
+
+  /* semantic colour — light */
+  --color-bg-page: var(--primitive-white);
+  --color-bg-surface-muted: var(--primitive-off-white);
+  --color-text-primary: var(--primitive-black);
+  --color-text-inverse: var(--primitive-white);
+  --color-text-link: var(--primitive-blue-500);
+  --color-text-link-hover: var(--primitive-blue-300);
+  --color-nav-bg: var(--primitive-black);
+  --color-nav-text: var(--primitive-white);
+  --color-nav-text-hover: var(--primitive-grey-500);
+  --color-button-bg: var(--primitive-white);
+  --color-button-fg: var(--primitive-black);
+  --color-button-border: var(--primitive-black);
+  --color-button-bg-hover: var(--primitive-black);
+  --color-button-fg-hover: var(--primitive-white);
+  --color-button-border-hover: var(--primitive-black);
+  --color-arrow-default: var(--primitive-black);
+  --color-arrow-inverse: var(--primitive-white);
+  --color-border-rule: var(--primitive-grey-300);
+  --color-border-subtle: var(--primitive-grey-100);
+  --color-bg-placeholder: var(--primitive-grey-100);
+  --color-text-on-light: var(--primitive-black);
+  --color-text-on-dark: var(--primitive-white);
+  --color-card-surface-ink: var(--primitive-black);
+  --color-card-surface-blue: var(--primitive-blue-700);
+  --color-card-surface-tint: var(--primitive-blue-050);
+  --color-card-surface-paper: var(--primitive-off-white);
+  --color-card-border: var(--primitive-grey-100);
+  --color-card-border-hover: var(--primitive-blue-300);
+  --color-card-placeholder-ink: var(--primitive-grey-950);
+  --color-card-placeholder-blue: var(--primitive-blue-400);
+  --color-text-muted: var(--primitive-grey-600);
+  --color-accent-dusk-surface: var(--primitive-dusk-100);
+  --color-accent-dusk-tint: var(--primitive-dusk-200);
+  --color-accent-dusk-anchor: var(--primitive-dusk-600);
+  --color-accent-dusk-ink: var(--primitive-dusk-800);
+  --color-accent-dusk-deep: var(--primitive-dusk-900);
+  --color-button-solid-bg-on-light: var(--primitive-black);
+  --color-button-solid-bg-on-light-hover: var(--primitive-grey-950);
+  --color-button-solid-bg-on-dark: var(--primitive-white);
+  --color-button-solid-bg-on-dark-hover: var(--primitive-grey-100);
+  --color-button-ghost-bg-hover-on-light: var(--primitive-grey-100);
+  --color-button-ghost-bg-hover-on-dark: var(--primitive-grey-950);
+
+  /* typography — Edu Arizona */
+  --font-family-serif: "EduArizonaSerif", Georgia, serif;
+  --font-family-sans: "EduArizonaSans", system-ui, sans-serif;
+  --font-weight-serif-thin: 100;
+  --font-weight-serif-light: 300;
+  --font-weight-serif-regular: 400;
+  --font-weight-serif-medium: 500;
+  --font-weight-serif-bold: 700;
+  --font-weight-sans-regular: 400;
+  --font-weight-sans-medium: 500;
+
+  /* scale — desktop */
+  --space-xs: 4px;  --space-sm: 8px;  --space-md: 16px; --space-lg: 24px;
+  --space-xl: 32px; --space-2xl: 40px; --space-3xl: 48px; --space-4xl: 64px;
+  --space-5xl: 100px; --space-6xl: 150px; --space-7xl: 200px;
+  --layout-page-margin: 108px;
+  --layout-gutter: 36px;
+  --layout-content-width: 1224px;
+  --layout-col-main: 768px;
+  --layout-col-spacer: 96px;
+  --layout-col-side: 288px;
+  --layout-hero-height: 1000px;
+  --layout-intro-width: 685px;
+  --radius-none: 0px;
+  --radius-infinite: 9999px;
+  --radius-pill: 36px;
+  --size-arrow-width: 25px;
+  --size-arrow-width-hover: 35px;
+  --size-arrow-stroke: 2px;
+  --size-arrow-cap: 10px;
+  --size-border-width: 1px;
+  --space-stack-eyebrow: 5.76px;
+  --space-stack-heading: 16.8px;
+  --space-stack-body: 20.8px;
+  --space-stack-button: 18px;
+  --space-stack-grid-item: 48px;
+  --space-skill-gap: 10.4px;
+  --space-section-pad: 100px;
+  --space-surface-pad: 150px;
+  --layout-viewport: 1440px;
+  --layout-intro-top: 150px;
+  --layout-logotype-width: 1080px;
+  --layout-photo-cell-w: 594px;
+  --layout-photo-cell-h: 396px;
+  --layout-gif-height: 0px;
+  --layout-nav-close-inset: 100.8px;
+  --layout-nav-height: 1024px;
+  --space-stack-hero: 40px;
+  --space-body-inset: 192px;
+  --font-size-hero: 40px;
+  --font-size-h1: 33.6px;
+  --font-size-h4: 24px;
+  --font-size-skill: 20.8px;
+  --font-size-h6: 38.4px;
+  --font-size-body: 20.8px;
+  --font-size-caption: 16px;
+  --font-size-eyebrow: 19.2px;
+  --font-size-label: 16px;
+  --font-size-micro: 13.6px;
+  --font-size-button: 18px;
+  --font-size-nav: 36px;
+  --font-size-burger: 32px;
+  --font-size-close: 60px;
+  --radius-card: 24px;
+  --space-card-pad-large: 40px;
+  --space-card-pad-default: 12px;
+  --space-card-pad-bottom: 120px;
+  --space-card-gap: 24px;
+  --space-card-flip-offset: 24px;
+  --space-card-action-inset: 24px;
+  --size-card-action: 56px;
+  --size-card-glyph: 20px;
+  --layout-card-w: 580px;
+  --layout-card-h: 620px;
+  --layout-card-gap-x: 64px;
+  --layout-card-gap-y: 40px;
+  --layout-card-media-h: 240px;
+  --radius-card-media: 12px;
+  --layout-card-media-bleed-h: 340px;
+  --layout-scroll-rule-h: 72px;
+
+  /* glass sheets — measured off Home — Desktop 1444 */
+  --sheet-radius: 48px;
+  --sheet-overlap: 298px;
+  --sheet-light: rgb(245 245 245 / 0.80);
+  --sheet-light-blur: 32px;
+  --sheet-dark: rgb(0 0 0 / 0.84);
+  --sheet-dark-blur: 4px;
+}
+
+@media (max-width: 750px) {
+  :root {
+    --layout-page-margin: 29.25px;
+    --layout-gutter: 9.75px;
+    --layout-content-width: 331.5px;
+    --layout-col-main: 331.5px;
+    --layout-col-spacer: 0px;
+    --layout-col-side: 331.5px;
+    --layout-hero-height: 1350px;
+    --layout-intro-width: 331.5px;
+    --space-stack-heading: 15.6px;
+    --layout-viewport: 390px;
+    --layout-intro-top: 430px;
+    --layout-logotype-width: 292.5px;
+    --layout-photo-cell-w: 331.5px;
+    --layout-photo-cell-h: 220.94px;
+    --layout-gif-height: 400px;
+    --layout-nav-close-inset: 27.3px;
+    --layout-nav-height: 844px;
+    --space-stack-hero: 33.6px;
+    --space-body-inset: 0px;
+    --font-size-hero: 33.6px;
+    --font-size-h1: 31.2px;
+    --space-card-pad-bottom: 104px;
+    --layout-card-w: 331.5px;
+    --layout-card-h: 640px;
+    --layout-card-gap-x: 0px;
+    --layout-card-media-h: 148px;
+    --layout-card-media-bleed-h: 290px;
+    --layout-scroll-rule-h: 56px;
+    /* the 298px overlap is a desktop measurement; it swallows the hero copy at 390 */
+    --sheet-overlap: 40px;
+    --sheet-radius: 32px;
+  }
+}
+
+/* Opt-in: put data-theme="dark" on any section */
+[data-theme="dark"] {
+  --color-bg-page: var(--primitive-black);
+  --color-bg-surface-muted: var(--primitive-black);
+  --color-text-primary: var(--primitive-white);
+  --color-text-inverse: var(--primitive-black);
+  --color-text-link: var(--primitive-blue-300);
+  --color-text-muted: var(--primitive-grey-500);
+  --color-button-border-hover: var(--primitive-white);
+  --color-accent-dusk-surface: var(--primitive-dusk-900);
+  --color-accent-dusk-tint: var(--primitive-dusk-600);
+  --color-accent-dusk-anchor: var(--primitive-dusk-200);
+  --color-accent-dusk-ink: var(--primitive-dusk-050);
+}
