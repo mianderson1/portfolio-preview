@@ -62,3 +62,15 @@
     if (e.target.tagName === 'A' && pop.hidePopover) pop.hidePopover();
   });
 })();
+
+/* Skill cards — cross-fade between the front heading and the back detail. */
+(function () {
+  document.querySelectorAll('.card').forEach(card => {
+    const btn = card.querySelector('.card__flip');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const open = card.classList.toggle('is-flipped');
+      btn.setAttribute('aria-expanded', String(open));
+    });
+  });
+})();
