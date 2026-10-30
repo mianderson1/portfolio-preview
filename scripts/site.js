@@ -1,3 +1,49 @@
+/* About carousel — no dependencies. */
+(function () {
+  const root = document.querySelector('[data-carousel]');
+  if (!root) return;
+
+  const slides = [...root.querySelectorAll('.slide')];
+  const dotsBox = root.querySelector('.carousel__dots');
+  const prev = root.querySelector('[data-prev]');
+  const next = root.querySelector('[data-next]');
+  let i = slides.findIndex(s => s.classList.contains('is-current'));
+  if (i < 0) i = 0;
+
+  const dots = slides.map((_, n) => {
+    const b = document.createElement('button');
+    b.className = 'carousel__dot';
+    b.type = 'button';
+    b.setAttribute('role', 'tab');
+    b.setAttribute('aria-label', `Slide ${n + 1} of ${slides.length}`);
+    b.addEventListener('click', () => go(n));
+    dotsBox.appendChild(b);
+    return b;
+  });
+
+  function go(n) {
+    const next = (n + slides.length) % slides.length;
+    if (next === i) return;
+    const forward = next > i || (i === slides.length - 1 && next === 0);
+    // the arriving slide comes from the direction of travel; the leaving one exits opposite
+    slides[next].style.setProperty('--enter', forward ? '16px' : '-16px');
+    slides[i].style.setProperty('--enter', forward ? '-16px' : '16px');
+    i = next;
+    slides.forEach((s, k) => s.classList.toggle('is-current', k === i));
+    dots.forEach((d, k) => d.setAttribute('aria-selected', String(k === i)));
+  }
+
+  prev.addEventListener('click', () => go(i - 1));
+  next.addEventListener('click', () => go(i + 1));
+
+  root.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft') { go(i - 1); prev.focus(); }
+    if (e.key === 'ArrowRight') { go(i + 1); next.focus(); }
+  });
+
+  go(i);
+})();
+
 /* Reveal the nav once the hero has scrolled past. */
 (function () {
   const nav = document.getElementById('site-nav');

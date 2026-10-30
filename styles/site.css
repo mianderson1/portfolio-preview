@@ -263,49 +263,78 @@ a { color: inherit; }
   clip-path: inset(50%); white-space: nowrap;
 }
 
-/* ───────── about: static intro + stacking cards ───────── */
-.about__grid {
+/* ───────── about carousel ───────── */
+.carousel {
   max-width: var(--layout-content-width);
   margin: 0 auto;
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: var(--space-4xl);
-  align-items: start;
+  padding: var(--space-2xl);
+  border: var(--size-border-width) solid rgb(255 255 255 / .35);
+  border-radius: var(--sheet-radius);
 }
-.about__intro { position: sticky; top: 34%; }
-.about__heading {
-  margin: var(--space-lg) 0 0;
-  font-size: var(--font-size-h6);
+
+/* every slide occupies the same grid cell, so the viewport is as tall as the
+   tallest slide and nothing reflows between them */
+.carousel__viewport { display: grid; }
+.slide {
+  grid-area: 1 / 1;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--layout-gutter);
+  align-items: start;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(var(--enter, 16px));
+  transition: opacity .34s cubic-bezier(.4,0,.2,1),
+              transform .34s cubic-bezier(.4,0,.2,1),
+              visibility .34s;
+}
+.slide.is-current {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+.slide__copy {
+  margin: 0;
+  font-size: var(--font-size-h1);
   font-weight: var(--font-weight-serif-thin);
   line-height: 1.2;
 }
+.slide__media { width: 572px; border-radius: var(--radius-card); }
 
-.stack { list-style: none; margin: 0; padding: 0; }
-.stack__card {
-  /* each card settles a little higher, so a sliver of the one before stays visible */
-  position: sticky;
-  top: calc(37% - (var(--i) * 3.5%));
-  margin-bottom: var(--space-5xl);
-  padding: var(--space-xl);
-  border-radius: var(--radius-card);
-  background: var(--primitive-grey-950);
-  border: var(--size-border-width) solid rgb(255 255 255 / .14);
-  box-shadow: 0 -12px 48px rgb(0 0 0 / .45);
+.carousel__controls {
+  display: flex; align-items: center; gap: var(--space-md);
+  margin-top: var(--space-2xl);
 }
-.stack__card:last-child { margin-bottom: 0; }
-.stack__num {
-  margin: 0 0 var(--space-md);
-  font-family: var(--font-family-sans);
-  font-size: var(--font-size-micro);
-  font-weight: var(--font-weight-sans-medium);
-  letter-spacing: .12em;
-  color: var(--color-text-muted);
+.carousel__arrow {
+  width: var(--size-card-action); height: var(--size-card-action);
+  display: grid; place-items: center;
+  border-radius: 50%; cursor: pointer;
+  background: none; color: var(--color-text-on-dark);
+  border: var(--size-border-width) solid rgb(255 255 255 / .35);
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease;
 }
-.stack__copy {
-  margin: 0 0 var(--space-lg);
-  font-size: var(--font-size-skill);
-  line-height: 1.4;
+.carousel__arrow:hover { background: rgb(255 255 255 / .12); }
+.carousel__arrow--next {
+  background: var(--color-text-on-dark);
+  color: var(--color-text-on-light);
+  border-color: transparent;
 }
-.stack__media { width: 100%; height: auto; border-radius: var(--radius-card-media); }
+.carousel__arrow--next:hover { background: var(--primitive-grey-100); }
+.carousel__arrow svg { width: 26px; height: 13px; }
+.carousel__dots { display: flex; gap: 10px; margin-left: var(--space-sm); }
+.carousel__dot {
+  width: 8px; height: 8px; padding: 0; border: 0; border-radius: 50%;
+  background: rgb(255 255 255 / .32); cursor: pointer;
+  transition: background-color .25s ease, transform .25s ease;
+}
+.carousel__dot[aria-selected="true"] {
+  background: var(--color-text-on-dark);
+  transform: scale(1.25);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide { transition: opacity .01ms; transform: none; }
+}
 
 /* ───────── footer ───────── */
 .site-footer {
@@ -375,14 +404,6 @@ a { color: inherit; }
   .slide__media { width: 100%; }
   .sheet { padding-inline: var(--layout-page-margin); }
   .footer-meta > div { flex-direction: column; gap: var(--space-xs); }
-  .about__grid { grid-template-columns: minmax(0,1fr); gap: var(--space-xl); }
-  .about__intro { position: static; }
-  .about__heading { font-size: var(--font-size-h1); }
-  .stack__card {
-    top: calc(14% - (var(--i) * 2%));
-    margin-bottom: var(--space-3xl);
-    padding: var(--space-lg);
-  }
 }
 
 /* ───────── reduced motion ───────── */
