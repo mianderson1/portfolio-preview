@@ -41,27 +41,27 @@
   go(i);
 })();
 
-/* Reveal the nav once the hero has scrolled past. */
+/* Reveal the nav once the hero has scrolled past.
+   Can't observe the hero itself: it is position:sticky for the sheet overlay,
+   so it stays pinned at top:0 and never stops intersecting. Use scroll depth. */
 (function () {
   const nav = document.getElementById('site-nav');
-  const hero = document.querySelector('.hero');
-  if (!nav || !hero) return;
+  if (!nav) return;
 
-  if (!('IntersectionObserver' in window)) { nav.classList.add('is-visible'); return; }
+  // a single class toggle is cheap; no rAF throttle needed
+  const update = () =>
+    nav.classList.toggle('is-visible', window.scrollY > window.innerHeight * 0.7);
+  addEventListener('scroll', update, { passive: true });
+  addEventListener('resize', update, { passive: true });
+  update();
 
-  new IntersectionObserver(
-    ([entry]) => nav.classList.toggle('is-visible', !entry.isIntersecting),
-    { rootMargin: '-40% 0px 0px 0px', threshold: 0 }
-  ).observe(hero);
-
-  // keep aria-expanded honest for the mobile disclosure
   const pop = document.getElementById('nav-sections');
   const btn = nav.querySelector('.site-nav__disclosure');
   if (pop && btn && 'onbeforetoggle' in pop) {
     pop.addEventListener('beforetoggle', e =>
       btn.setAttribute('aria-expanded', String(e.newState === 'open')));
   }
-  pop && pop.addEventListener('click', e => {
+  if (pop) pop.addEventListener('click', e => {
     if (e.target.tagName === 'A' && pop.hidePopover) pop.hidePopover();
   });
 })();
