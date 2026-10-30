@@ -278,7 +278,7 @@ a { color: inherit; }
   margin: 0 auto;
   padding: var(--space-2xl);
   border: var(--size-border-width) solid rgb(255 255 255 / .35);
-  border-radius: var(--sheet-radius);
+  border-radius: var(--radius-card);
 }
 
 /* every slide occupies the same grid cell, so the viewport is as tall as the
@@ -405,7 +405,7 @@ a { color: inherit; }
   .site-nav__disclosure svg { width: 12px; height: 8px; }
   .nav-popover:popover-open {
     position: fixed; inset: auto 0 0 0; width: 100%;
-    border-radius: var(--sheet-radius) var(--sheet-radius) 0 0;
+    border-radius: var(--radius-card) var(--radius-card) 0 0;
     padding: var(--space-lg) var(--layout-page-margin)
              calc(var(--space-4xl) + env(safe-area-inset-bottom, 0px));
   }

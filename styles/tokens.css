@@ -148,7 +148,7 @@
   --layout-scroll-rule-h: 72px;
 
   /* glass sheets — measured off Home — Desktop 1444 */
-  --sheet-radius: 48px;
+  --sheet-radius: 0px;   /* square slices — trying it without the rounded top */
   --sheet-overlap: 55px;
   --sheet-light: rgb(245 245 245 / 0.90);
   --sheet-light-blur: 32px;
@@ -188,7 +188,7 @@
     --layout-scroll-rule-h: 56px;
     /* the 298px overlap is a desktop measurement; it swallows the hero copy at 390 */
     --sheet-overlap: 24px;
-    --sheet-radius: 32px;
+    --sheet-radius: 0px;
   }
 }
 

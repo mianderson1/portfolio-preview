@@ -204,3 +204,16 @@
     });
   });
 })();
+
+/* "Hello" goes to the very top. The hero is position:sticky, so an #anchor jump
+   lands at its flow position rather than at the top of the document. */
+(function () {
+  document.querySelectorAll('a[href="#hello"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const pop = document.getElementById('nav-sections');
+      if (pop && pop.matches(':popover-open')) pop.hidePopover();
+      window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    });
+  });
+})();
