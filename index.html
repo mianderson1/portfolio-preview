@@ -36,7 +36,7 @@
       </svg>
     </button>
 
-    <a class="btn btn--solid btn--avatar has-ring" href="#contact">
+    <a class="btn btn--solid btn--avatar has-ring" href="mailto:mikeandersondesigner@gmail.com" data-copy-email="mikeandersondesigner@gmail.com">
       Contact Mike
       <span class="btn__dec" aria-hidden="true"><svg viewBox="0 0 512 512" aria-hidden="true" focusable="false" fill="currentColor"><path d="M 24 64 L 0 64 L 0 448 L 512 448 L 512 64 L 24 64 Z M 464 128 L 464 132.1 L 256 289.9 L 48 132.1 L 48 112 L 464 112 L 464 128 Z M 464 192.3 L 464 400 L 48 400 L 48 192.3 L 241.5 339.1 L 256 350.1 L 270.5 339.1 L 464 192.3 Z"/></svg></span>
     </a>
@@ -60,7 +60,7 @@
     <div class="hero__intro">
       <h1 class="hero__heading" data-lines>I&rsquo;m a strategic designer who defines product vision, drives stakeholder alignment, and executes with pixel-perfect precision.</h1>
       <p class="hero__currently"><em>Currently:</em> Building a new model of healthcare at Midi Health</p>
-      <p class="hero__actions"><a class="btn btn--solid has-ring" href="#contact">Contact Mike<span class="btn__icon"><svg viewBox="0 0 512 512" aria-hidden="true" focusable="false" fill="currentColor"><path d="M 24 64 L 0 64 L 0 448 L 512 448 L 512 64 L 24 64 Z M 464 128 L 464 132.1 L 256 289.9 L 48 132.1 L 48 112 L 464 112 L 464 128 Z M 464 192.3 L 464 400 L 48 400 L 48 192.3 L 241.5 339.1 L 256 350.1 L 270.5 339.1 L 464 192.3 Z"/></svg></span></a></p>
+      <p class="hero__actions"><a class="btn btn--solid has-ring" href="mailto:mikeandersondesigner@gmail.com" data-copy-email="mikeandersondesigner@gmail.com">Contact Mike<span class="btn__icon"><svg viewBox="0 0 512 512" aria-hidden="true" focusable="false" fill="currentColor"><path d="M 24 64 L 0 64 L 0 448 L 512 448 L 512 64 L 24 64 Z M 464 128 L 464 132.1 L 256 289.9 L 48 132.1 L 48 112 L 464 112 L 464 128 Z M 464 192.3 L 464 400 L 48 400 L 48 192.3 L 241.5 339.1 L 256 350.1 L 270.5 339.1 L 464 192.3 Z"/></svg></span></a></p>
     </div>
 
     <a class="scroll-cue" href="#skills" aria-label="Scroll to skills">
@@ -192,9 +192,16 @@
   <dl class="footer-meta">
     <div><dt>Copyright</dt><dd>&copy; 2026</dd></div>
     <div><dt>Made in San Francisco</dt><dd>HTML &amp; CSS written by me</dd></div>
-    <div><dt>Get in touch</dt><dd><a href="mailto:mikeandersondesigner@gmail.com">Email Mike</a></dd></div>
+    <div><dt>Get in touch</dt><dd><a href="mailto:mikeandersondesigner@gmail.com" data-copy-email="mikeandersondesigner@gmail.com">Email Mike</a></dd></div>
   </dl>
 </footer>
+
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden>
+  <svg class="toast__check" viewBox="0 0 512 512" aria-hidden="true" fill="currentColor"><path d="M256 512a256 256 0 1 1 0-512 256 256 0 1 1 0 512zm0-464a208 208 0 1 0 0 416 208 208 0 1 0 0-416zM379.7 178.8l-14.1 19.4-122.1 167.9-16.5 22.7-92.7-92.7 33.9-33.9 53 53 105.6-145.2 14.1-19.4 38.8 28.2z"/></svg>
+  <p class="toast__text">Copied email address</p>
+  <button class="toast__close" type="button" aria-label="Dismiss"><svg viewBox="0 0 448 512" aria-hidden="true" fill="currentColor"><path d="M39.5 105l-17-17 33.9-33.9 17 17 151 151 151-151 17-17 33.9 33.9-17 17-151 151 151 151 17 17-33.9 33.9-17-17-151-151-151 151-17 17-33.9-33.9 17-17 151-151-151-151z"/></svg></button>
+</div>
 
 <script src="scripts/site.js" defer></script>
 </body>

@@ -161,3 +161,46 @@
     }, 180);
   });
 })();
+
+/* Copy the email address to the clipboard and confirm with a toast.
+   The links keep a mailto: href, so without JS (or without clipboard
+   permission) they still do something useful. */
+(function () {
+  const toast = document.getElementById('toast');
+  const targets = document.querySelectorAll('[data-copy-email]');
+  if (!toast || !targets.length) return;
+
+  const closeBtn = toast.querySelector('.toast__close');
+  const label = toast.querySelector('.toast__text');
+  let timer;
+
+  function show(message) {
+    label.textContent = message;
+    toast.hidden = false;
+    void toast.offsetWidth;                 // let the transition catch the change
+    toast.classList.add('is-open');
+    clearTimeout(timer);
+    timer = setTimeout(hide, 4000);
+  }
+  function hide() {
+    clearTimeout(timer);
+    toast.classList.remove('is-open');
+    setTimeout(() => { toast.hidden = true; }, 300);
+  }
+  closeBtn.addEventListener('click', hide);
+  addEventListener('keydown', e => { if (e.key === 'Escape') hide(); });
+
+  targets.forEach(el => {
+    el.addEventListener('click', async e => {
+      const email = el.dataset.copyEmail;
+      if (!navigator.clipboard) return;     // fall through to mailto:
+      e.preventDefault();
+      try {
+        await navigator.clipboard.writeText(email);
+        show('Copied email address');
+      } catch (err) {
+        window.location.href = el.href;     // clipboard blocked — open the mail client
+      }
+    });
+  });
+})();
