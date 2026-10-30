@@ -67,7 +67,7 @@ a { color: inherit; }
 
 /* ───────── hero ───────── */
 .hero {
-  position: relative;
+  position: sticky; top: 0;
   min-height: var(--layout-hero-height);
   padding: var(--layout-intro-top) var(--layout-page-margin) var(--space-5xl);
   display: flex; align-items: flex-start;
@@ -144,17 +144,21 @@ a { color: inherit; }
 
 /* ───────── glass sheets ───────── */
 .sheet {
+  /* rides up over whatever is behind it; rounded top + translucency do the overlay */
   position: relative;
   border-radius: var(--sheet-radius) var(--sheet-radius) 0 0;
   padding: var(--space-surface-pad) var(--layout-page-margin);
 }
 .skills {
+  z-index: 2;
   padding-top: var(--space-3xl);
   background: var(--sheet-light);
   backdrop-filter: blur(var(--sheet-light-blur));
   margin-top: calc(var(--sheet-overlap) * -1);
 }
 .about {
+  z-index: 3;
+  margin-top: calc(var(--sheet-overlap) * -1);
   background: var(--sheet-dark);
   backdrop-filter: blur(var(--sheet-dark-blur));
   color: var(--color-text-on-dark);
@@ -309,6 +313,7 @@ a { color: inherit; }
 
 /* ───────── footer ───────── */
 .site-footer {
+  position: relative; z-index: 4;
   background: var(--primitive-black);
   color: var(--color-text-on-dark);
   padding: var(--space-2xl) var(--layout-page-margin) var(--space-5xl);

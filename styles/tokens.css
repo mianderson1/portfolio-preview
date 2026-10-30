@@ -149,11 +149,11 @@
 
   /* glass sheets — measured off Home — Desktop 1444 */
   --sheet-radius: 48px;
-  --sheet-overlap: 298px;
-  --sheet-light: rgb(245 245 245 / 0.80);
+  --sheet-overlap: 55px;
+  --sheet-light: rgb(245 245 245 / 0.90);
   --sheet-light-blur: 32px;
-  --sheet-dark: rgb(0 0 0 / 0.84);
-  --sheet-dark-blur: 4px;
+  --sheet-dark: rgb(0 0 0 / 0.80);
+  --sheet-dark-blur: 32px;
 }
 
 @media (max-width: 750px) {
@@ -187,7 +187,7 @@
     --layout-card-media-bleed-h: 290px;
     --layout-scroll-rule-h: 56px;
     /* the 298px overlap is a desktop measurement; it swallows the hero copy at 390 */
-    --sheet-overlap: 40px;
+    --sheet-overlap: 24px;
     --sheet-radius: 32px;
   }
 }
