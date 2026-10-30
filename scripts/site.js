@@ -162,9 +162,12 @@
   });
 })();
 
-/* Copy the email address to the clipboard and confirm with a toast.
-   The links keep a mailto: href, so without JS (or without clipboard
-   permission) they still do something useful. */
+/* Copy the email address and confirm with a toast.
+   This never hands off to the mail client: the click is always cancelled, and
+   if the async clipboard is unavailable or rejects (Safari does when the page
+   is not focused) we fall back to a hidden textarea, then to showing the
+   address in the toast so it can still be read off. The mailto: href only
+   survives for right-click "Copy Email Address" and for no-JS. */
 (function () {
   const toast = document.getElementById('toast');
   const targets = document.querySelectorAll('[data-copy-email]');
@@ -190,17 +193,31 @@
   closeBtn.addEventListener('click', hide);
   addEventListener('keydown', e => { if (e.key === 'Escape') hide(); });
 
+  // deprecated, but still the only copy path in a few browsers
+  function legacyCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:fixed;top:0;left:-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (err) { ok = false; }
+    ta.remove();
+    return ok;
+  }
+
   targets.forEach(el => {
     el.addEventListener('click', async e => {
+      e.preventDefault();                   // never open the mail app
       const email = el.dataset.copyEmail;
-      if (!navigator.clipboard) return;     // fall through to mailto:
-      e.preventDefault();
-      try {
-        await navigator.clipboard.writeText(email);
-        show('Copied email address');
-      } catch (err) {
-        window.location.href = el.href;     // clipboard blocked — open the mail client
+      let ok = false;
+      if (navigator.clipboard) {
+        try { await navigator.clipboard.writeText(email); ok = true; }
+        catch (err) { ok = false; }
       }
+      if (!ok) ok = legacyCopy(email);
+      show(ok ? 'Copied email address' : email);
     });
   });
 })();

@@ -341,7 +341,10 @@ a { color: inherit; }
   font-size: var(--font-size-h1);
   font-weight: var(--font-weight-serif-thin);
   line-height: 1.2;
-  align-self: start;
+  /* The media sets the row height (a 288px-wide portrait is ~474px tall at its
+     native aspect), and no slide's copy is that long. Centring splits the
+     leftover space instead of dumping it all below the text. */
+  align-self: center;
 }
 .slide__media {
   width: 100%; height: 100%;
