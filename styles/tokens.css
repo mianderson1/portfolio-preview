@@ -81,7 +81,11 @@
   --space-xs: 4px;  --space-sm: 8px;  --space-md: 16px; --space-lg: 24px;
   --space-xl: 32px; --space-2xl: 40px; --space-3xl: 48px; --space-4xl: 64px;
   --space-5xl: 100px; --space-6xl: 150px; --space-7xl: 200px;
-  --layout-page-margin: 108px;
+  /* 48, not the Figma port's 108: content is capped at --layout-content-width,
+     so above ~1320px the cap still yields ~108px of visual margin and below it
+     the margin absorbs the squeeze instead of the type. Diverges from the
+     Figma variable on purpose — that one records the old live site. */
+  --layout-page-margin: 48px;
   --layout-gutter: 36px;
   --layout-content-width: 1224px;
   --layout-col-main: 768px;
