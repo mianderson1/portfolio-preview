@@ -447,3 +447,79 @@ a { color: inherit; }
 @media (prefers-reduced-motion: reduce) {
   .is-revealing .line > span { animation: none; }
 }
+
+/* ───────── animated gradient ring ─────────
+   Stops lifted from the Figma "Button / Gradient border" component. The ring is a
+   masked pseudo-element so it never touches the element's own background. */
+@property --grad-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.has-ring { position: relative; }
+.has-ring::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 2px;
+  background: conic-gradient(from var(--grad-angle),
+    #FFCE70 0%, #F0B4E4 30%, #C6B6F0 58%, #A8E8DC 82%, #FFCE70 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          mask-composite: exclude;
+  opacity: 0;
+  transition: opacity .3s ease;
+  pointer-events: none;
+}
+.has-ring:hover::after,
+.has-ring:focus-visible::after { opacity: 1; animation: ring-spin 3.2s linear infinite; }
+
+@keyframes ring-spin { to { --grad-angle: 360deg; } }
+
+/* no @property support: the ring still shows, it just doesn't rotate */
+@supports not (background: conic-gradient(from var(--grad-angle), red, blue)) {
+  .has-ring::after { background: conic-gradient(#FFCE70, #F0B4E4 30%, #C6B6F0 58%, #A8E8DC 82%, #FFCE70); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .has-ring:hover::after { animation: none; }
+}
+
+/* ───────── envelope reveal on the contact buttons ───────── */
+.btn__icon {
+  display: inline-flex; align-items: center;
+  width: 0; margin-left: 0; opacity: 0; overflow: hidden;
+  transition: width .3s cubic-bezier(.2,.7,.3,1),
+              margin-left .3s cubic-bezier(.2,.7,.3,1),
+              opacity .22s ease;
+}
+.btn__icon svg { width: 18px; height: 18px; flex: none; }
+.btn:hover .btn__icon,
+.btn:focus-visible .btn__icon { width: 18px; margin-left: var(--space-sm); opacity: 1; }
+
+/* the nav button already carries the avatar, so swap it rather than add to it */
+.btn__dec { position: relative; }
+.btn__dec svg {
+  position: absolute; inset: 0; margin: auto;
+  width: 16px; height: 16px;
+  opacity: 0; transition: opacity .25s ease;
+  color: var(--color-text-on-light);
+}
+.btn--avatar:hover .btn__dec svg { opacity: 1; }
+.btn--avatar:hover .btn__dec { background-color: #fff; }
+.btn--avatar .btn__dec::after {
+  content: ""; position: absolute; inset: 0; border-radius: 50%;
+  background: #fff; opacity: 0; transition: opacity .25s ease;
+}
+.btn--avatar:hover .btn__dec::after { opacity: .88; }
+.btn--avatar .btn__dec svg { z-index: 1; }
+
+/* ───────── flip card hover ───────── */
+.card.has-ring::after { inset: 0; }
+.card__media { transition: transform .45s cubic-bezier(.2,.7,.3,1), opacity .28s ease; }
+.card:hover .card__media { transform: scale(1.055); }
+@media (prefers-reduced-motion: reduce) {
+  .card:hover .card__media { transform: none; }
+}
