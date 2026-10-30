@@ -156,6 +156,18 @@ a { color: inherit; }
   backdrop-filter: blur(var(--sheet-light-blur));
   margin-top: calc(var(--sheet-overlap) * -1);
 }
+.about .carousel {
+  --sheet-ink: var(--color-text-on-light);
+  --sheet-rule: rgb(0 0 0 / .16);
+  --sheet-dot: rgb(0 0 0 / .22);
+  --sheet-hover: rgb(0 0 0 / .06);
+  color: var(--color-text-on-light);
+}
+.about .carousel__arrow--next {
+  background: var(--color-text-on-light);
+  color: var(--color-text-on-dark);
+}
+.about .carousel__dot[aria-selected="true"] { background: var(--color-text-on-light); }
 .about {
   --sheet-ink: var(--color-text-on-dark);
   --sheet-rule: rgb(255 255 255 / .35);
@@ -179,6 +191,7 @@ a { color: inherit; }
   backdrop-filter: blur(var(--sheet-light-blur));
   color: var(--color-text-on-light);
 }
+.about--light .carousel { background: var(--color-bg-page); }
 .about--light .carousel__arrow--next {
   background: var(--color-text-on-light);
   color: var(--color-text-on-dark);
@@ -294,31 +307,48 @@ a { color: inherit; }
 }
 
 /* ───────── about carousel ───────── */
+/* Geometry from Figma 226:18248 — text column dominant, media full-height,
+   controls pinned bottom-left so their baseline matches the media's bottom edge. */
 .carousel {
+  position: relative;
   max-width: var(--layout-content-width);
   margin: 0 auto;
-  padding: var(--space-2xl);
-  border: var(--size-border-width) solid var(--sheet-rule);
+  padding: var(--space-card-pad-large);
   border-radius: var(--radius-card);
+  background: var(--color-bg-page);          /* white, same as the flip cards */
 }
 
-/* every slide occupies the same grid cell, so the viewport is as tall as the
-   tallest slide and nothing reflows between them */
 .carousel__viewport { display: grid; }
 .slide {
   grid-area: 1 / 1;
   display: grid;
-  /* media may shrink; a fixed 572px starves the copy column below ~1300px */
-  grid-template-columns: minmax(0, 1fr) minmax(0, 572px);
+  grid-template-columns: minmax(0, 1fr) var(--media-w, 572px);
   gap: var(--layout-gutter);
-  align-items: start;
+  align-items: stretch;
+  min-height: var(--slide-h, 474px);
   opacity: 0;
   visibility: hidden;
   transition: opacity .3s ease, visibility .3s;
 }
 .slide.is-current { opacity: 1; visibility: visible; }
+/* slide 1 is a tall portrait, so its media column is much narrower */
+.slide--portrait { --media-w: 288px; }
 
-/* the media dissolves a beat after the copy starts revealing */
+.slide__copy {
+  margin: 0;
+  /* keep the copy clear of the controls pinned beneath it */
+  padding-bottom: calc(var(--size-card-action) + var(--space-lg));
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-serif-thin);
+  line-height: 1.2;
+  align-self: start;
+}
+.slide__media {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-card);
+  align-self: stretch;
+}
 .slide.is-current .slide__media {
   animation: media-in .7s cubic-bezier(.22,.61,.24,1) both;
   animation-delay: 140ms;
@@ -327,17 +357,12 @@ a { color: inherit; }
   from { opacity: 0; transform: scale(.988); }
   to   { opacity: 1; transform: none; }
 }
-.slide__copy {
-  margin: 0;
-  font-size: var(--font-size-h1);
-  font-weight: var(--font-weight-serif-thin);
-  line-height: 1.2;
-}
-.slide__media { width: 100%; height: auto; border-radius: var(--radius-card); }
 
 .carousel__controls {
+  position: absolute;
+  left: var(--space-card-pad-large);
+  bottom: var(--space-card-pad-large);
   display: flex; align-items: center; gap: var(--space-md);
-  margin-top: var(--space-2xl);
 }
 .carousel__arrow {
   width: var(--size-card-action); height: var(--size-card-action);
