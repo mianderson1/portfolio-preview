@@ -244,6 +244,12 @@ a { color: inherit; }
 .card.is-flipped .card__face--back  { opacity: 1; pointer-events: auto; }
 .card.is-flipped .card__media       { opacity: 0; }
 
+.card { cursor: pointer; transition: box-shadow .25s ease; }
+.card:hover { box-shadow: 0 10px 36px rgb(0 0 0 / .09); }
+.card:hover .card__flip { transform: scale(1.14); }
+.card.is-flipped:hover .card__flip { transform: rotate(45deg) scale(1.14); }
+.card:hover .card__flip svg { transform: scale(1.06); }
+
 .card__flip {
   position: absolute;
   right: var(--space-card-action-inset); bottom: var(--space-card-action-inset);
@@ -252,9 +258,12 @@ a { color: inherit; }
   border: 0; border-radius: 50%;
   background: var(--color-card-surface-ink);
   color: var(--color-text-on-dark);
-  transition: transform .28s ease;
+  transition: transform .28s cubic-bezier(.34,1.3,.5,1);
 }
-.card__flip svg { width: var(--size-card-glyph); height: var(--size-card-glyph); }
+.card__flip svg {
+  width: var(--size-card-glyph); height: var(--size-card-glyph);
+  transition: transform .25s cubic-bezier(.34,1.3,.5,1);
+}
 .card.is-flipped .card__flip { transform: rotate(45deg); }
 
 .u-visually-hidden {
@@ -284,15 +293,18 @@ a { color: inherit; }
   align-items: start;
   opacity: 0;
   visibility: hidden;
-  transform: translateX(var(--enter, 16px));
-  transition: opacity .34s cubic-bezier(.4,0,.2,1),
-              transform .34s cubic-bezier(.4,0,.2,1),
-              visibility .34s;
+  transition: opacity .3s ease, visibility .3s;
 }
-.slide.is-current {
-  opacity: 1;
-  visibility: visible;
-  transform: none;
+.slide.is-current { opacity: 1; visibility: visible; }
+
+/* the media dissolves a beat after the copy starts revealing */
+.slide.is-current .slide__media {
+  animation: media-in .7s cubic-bezier(.22,.61,.24,1) both;
+  animation-delay: 140ms;
+}
+@keyframes media-in {
+  from { opacity: 0; transform: scale(.988); }
+  to   { opacity: 1; transform: none; }
 }
 .slide__copy {
   margin: 0;
@@ -334,7 +346,8 @@ a { color: inherit; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .slide { transition: opacity .01ms; transform: none; }
+  .slide { transition: opacity .01ms; }
+  .slide.is-current .slide__media { animation: none; }
 }
 
 /* ───────── footer ───────── */

@@ -24,10 +24,6 @@
   function go(n) {
     const next = (n + slides.length) % slides.length;
     if (next === i) return;
-    const forward = next > i || (i === slides.length - 1 && next === 0);
-    // the arriving slide comes from the direction of travel; the leaving one exits opposite
-    slides[next].style.setProperty('--enter', forward ? '16px' : '-16px');
-    slides[i].style.setProperty('--enter', forward ? '-16px' : '16px');
     i = next;
     slides.forEach((s, k) => s.classList.toggle('is-current', k === i));
     dots.forEach((d, k) => d.setAttribute('aria-selected', String(k === i)));
@@ -75,9 +71,16 @@
   document.querySelectorAll('.card').forEach(card => {
     const btn = card.querySelector('.card__flip');
     if (!btn) return;
-    btn.addEventListener('click', () => {
+    const toggle = () => {
       const open = card.classList.toggle('is-flipped');
       btn.setAttribute('aria-expanded', String(open));
+    };
+    btn.addEventListener('click', toggle);
+    card.addEventListener('click', e => {
+      if (e.target.closest('.card__flip')) return;   // button fires its own handler
+      if (e.target.closest('a')) return;             // let links behave normally
+      if (String(getSelection())) return;            // don't toggle after selecting text
+      toggle();
     });
   });
 })();
