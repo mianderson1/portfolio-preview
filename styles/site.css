@@ -322,23 +322,24 @@ a { color: inherit; }
 .slide {
   grid-area: 1 / 1;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) var(--media-w, 572px);
+  /* Equal columns. A fixed 572px media starved the copy as the window narrowed
+     — at a 900px viewport the text column computed to -4px. Both sides now
+     shrink together, and the media's aspect ratio sets the row height. */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: var(--layout-gutter);
-  align-items: stretch;
-  min-height: var(--slide-h, 474px);
+  align-items: center;
   opacity: 0;
   visibility: hidden;
   transition: opacity .3s ease, visibility .3s;
 }
 .slide.is-current { opacity: 1; visibility: visible; }
-/* slide 1 is a tall portrait, so its media column is much narrower */
-.slide--portrait { --media-w: 288px; }
 
 .slide__copy {
   margin: 0;
   /* keep the copy clear of the controls pinned beneath it */
   padding-bottom: calc(var(--size-card-action) + var(--space-lg));
-  font-size: var(--font-size-h1);
+  /* half-width columns can't carry 33.6px display type much below 1300px */
+  font-size: clamp(22px, 2.35vw, var(--font-size-h1));
   font-weight: var(--font-weight-serif-thin);
   line-height: 1.2;
   /* The media sets the row height (a 288px-wide portrait is ~474px tall at its
@@ -347,10 +348,20 @@ a { color: inherit; }
   align-self: center;
 }
 .slide__media {
-  width: 100%; height: 100%;
+  width: 100%;
+  aspect-ratio: 572 / 474;                   /* the landscape graphics */
   object-fit: cover;
   border-radius: var(--radius-card);
-  align-self: stretch;
+}
+/* Slide 1 is a portrait. Filling the column would crop his head into a
+   letterbox, and sizing off the row height (height:100%) is circular — the
+   ratio then resolves against the column width and the card balloons. So it
+   gets the width that lands it on the same height as the landscape slides:
+   (col / 1.2068) * 0.6076 = col * 0.503. */
+.slide--portrait .slide__media {
+  width: 50.3%;
+  aspect-ratio: 288 / 474;
+  margin-left: auto;                         /* hug the right edge, as in Figma */
 }
 .slide.is-current .slide__media {
   animation: media-in .7s cubic-bezier(.22,.61,.24,1) both;
@@ -392,6 +403,17 @@ a { color: inherit; }
 .carousel__dot[aria-selected="true"] {
   background: var(--color-text-on-dark);
   transform: scale(1.25);
+}
+
+/* Below this the copy column is too narrow for display type at any size, so
+   the slide stacks rather than squeezing both halves. */
+@media (max-width: 900px) {
+  /* align-content, not align-items: the slides share one grid cell, so without
+     it the auto rows stretch to the tallest slide and tear copy from media */
+  .slide { grid-template-columns: minmax(0, 1fr); align-content: center; }
+  .slide__copy { font-size: var(--font-size-h1); padding-bottom: 0; }
+  .slide--portrait .slide__media { margin-inline: auto; }
+  .carousel__controls { position: static; margin-top: var(--space-lg); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -465,6 +487,11 @@ a { color: inherit; }
   .section-heading { font-size: var(--font-size-h1); }
   .slide { grid-template-columns: minmax(0, 1fr); }
   .slide__media { width: 100%; }
+  .slide--portrait .slide__media {
+    width: 62%; height: auto;
+    align-self: center;
+    margin-inline: auto;
+  }
   .sheet { padding-inline: var(--layout-page-margin); }
   .footer-meta > div { flex-direction: column; gap: var(--space-xs); }
 }
