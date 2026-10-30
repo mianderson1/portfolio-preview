@@ -278,7 +278,8 @@ a { color: inherit; }
 .slide {
   grid-area: 1 / 1;
   display: grid;
-  grid-template-columns: 1fr auto;
+  /* media may shrink; a fixed 572px starves the copy column below ~1300px */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 572px);
   gap: var(--layout-gutter);
   align-items: start;
   opacity: 0;
@@ -299,7 +300,7 @@ a { color: inherit; }
   font-weight: var(--font-weight-serif-thin);
   line-height: 1.2;
 }
-.slide__media { width: 572px; border-radius: var(--radius-card); }
+.slide__media { width: 100%; height: auto; border-radius: var(--radius-card); }
 
 .carousel__controls {
   display: flex; align-items: center; gap: var(--space-md);
@@ -412,4 +413,24 @@ a { color: inherit; }
   .hero__media { display: none; }
   .hero__still { display: block; }
   * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+/* ───────── line-by-line reveal ───────── */
+/* Text is visible by default. The hidden state lives only inside the keyframes,
+   so a failed script or a browser that skips the animation still shows the copy. */
+.line { display: block; overflow: hidden; }
+.line > span { display: block; }
+
+.is-revealing .line > span {
+  animation: line-in .62s cubic-bezier(.22,.61,.24,1) both;
+  animation-delay: calc(var(--n, 0) * 85ms);
+  will-change: opacity, transform;
+}
+@keyframes line-in {
+  from { opacity: 0; transform: translateY(0.52em); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .is-revealing .line > span { animation: none; }
 }
