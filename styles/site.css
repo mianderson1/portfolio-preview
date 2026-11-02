@@ -257,6 +257,16 @@ a { color: inherit; }
   background: var(--color-bg-page);
 }
 .card:nth-child(2) { background: var(--color-card-surface-paper); }
+
+/* Flipping reveals the card's own accent — the same colour as its media, which
+   is fading out underneath. All five clear AA against the #2E2E2E copy
+   (periwinkle is the tightest at 4.91), so the ink does not need to change. */
+.card--ui             { --card-accent: var(--primitive-gold-400); }
+.card--prototyping    { --card-accent: var(--primitive-coral-400); }
+.card--content        { --card-accent: var(--primitive-chartreuse-300); }
+.card--design-systems { --card-accent: var(--primitive-periwinkle-400); }
+.card--user-research  { --card-accent: var(--primitive-pink-300); }
+.card.is-flipped      { background: var(--card-accent, var(--color-bg-page)); }
 .card--wide { grid-column: 1 / -1; justify-self: center; width: var(--layout-card-w); }
 .card__eyebrow {
   margin: 0;
@@ -302,7 +312,7 @@ a { color: inherit; }
 .card.is-flipped .card__face--back  { opacity: 1; pointer-events: auto; }
 .card.is-flipped .card__frame       { opacity: 0; }
 
-.card { cursor: pointer; transition: box-shadow .25s ease; }
+.card { cursor: pointer; transition: box-shadow .25s ease, background-color .3s ease; }
 .card:hover { box-shadow: 0 10px 36px rgb(0 0 0 / .09); }
 .card:hover .card__flip { transform: scale(1.14); }
 .card.is-flipped:hover .card__flip { transform: rotate(45deg) scale(1.14); }

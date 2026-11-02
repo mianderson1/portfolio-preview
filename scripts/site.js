@@ -108,9 +108,14 @@
   document.querySelectorAll('.card').forEach(card => {
     const btn = card.querySelector('.card__flip');
     if (!btn) return;
+    const back = card.querySelector('.card__face--back[data-lines]');
     const toggle = () => {
       const open = card.classList.toggle('is-flipped');
       btn.setAttribute('aria-expanded', String(open));
+      // the back copy reveals line by line, same as the hero and slide copy.
+      // __playLines is defined once fonts have loaded, which is long before a
+      // click can land, but guard anyway so a flip never depends on it.
+      if (open && back && window.__playLines) window.__playLines(back);
     };
     btn.addEventListener('click', toggle);
     card.addEventListener('click', e => {

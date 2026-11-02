@@ -15,6 +15,13 @@
   --primitive-blue-700: #4E74AE;
   --primitive-grey-950: #1F1F1F;
   --primitive-grey-900: #2E2E2E;
+  /* saturated hero palette — each skill card's media surface, reused as its
+     flipped background */
+  --primitive-gold-400: #F5C451;
+  --primitive-coral-400: #ED7E74;
+  --primitive-chartreuse-300: #D2ED82;
+  --primitive-periwinkle-400: #8297ED;
+  --primitive-pink-300: #F998C9;
   --primitive-blue-400: #6385B8;
   --primitive-dusk-050: #F3F0FB;
   --primitive-dusk-100: #E5DFF7;
