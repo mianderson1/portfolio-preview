@@ -14,6 +14,7 @@
   --primitive-blue-050: #EDF2FA;
   --primitive-blue-700: #4E74AE;
   --primitive-grey-950: #1F1F1F;
+  --primitive-grey-900: #2E2E2E;
   --primitive-blue-400: #6385B8;
   --primitive-dusk-050: #F3F0FB;
   --primitive-dusk-100: #E5DFF7;
@@ -25,7 +26,7 @@
   /* semantic colour — light */
   --color-bg-page: var(--primitive-white);
   --color-bg-surface-muted: var(--primitive-off-white);
-  --color-text-primary: var(--primitive-black);
+  --color-text-primary: var(--primitive-grey-900);
   --color-text-inverse: var(--primitive-white);
   --color-text-link: var(--primitive-blue-500);
   --color-text-link-hover: var(--primitive-blue-300);
@@ -43,7 +44,7 @@
   --color-border-rule: var(--primitive-grey-300);
   --color-border-subtle: var(--primitive-grey-100);
   --color-bg-placeholder: var(--primitive-grey-100);
-  --color-text-on-light: var(--primitive-black);
+  --color-text-on-light: var(--primitive-grey-900);
   --color-text-on-dark: var(--primitive-white);
   --color-card-surface-ink: var(--primitive-black);
   --color-card-surface-blue: var(--primitive-blue-700);
@@ -119,7 +120,7 @@
   --layout-nav-height: 1024px;
   --space-stack-hero: 40px;
   --space-body-inset: 192px;
-  --font-size-hero: 40px;
+  --font-size-hero: 48px;
   --font-size-h1: 33.6px;
   --font-size-h4: 24px;
   --font-size-skill: 20.8px;
@@ -181,7 +182,7 @@
     --layout-nav-height: 844px;
     --space-stack-hero: 33.6px;
     --space-body-inset: 0px;
-    --font-size-hero: 33.6px;
+    --font-size-hero: 40px;
     --font-size-h1: 31.2px;
     --space-card-pad-bottom: 104px;
     --layout-card-w: 331.5px;

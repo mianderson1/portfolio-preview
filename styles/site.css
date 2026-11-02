@@ -95,7 +95,7 @@ a { color: inherit; }
 .hero__heading {
   margin: 0 0 var(--space-2xl);
   font-size: var(--font-size-hero);
-  font-weight: var(--font-weight-serif-thin);    /* Display/Hero = Thin */
+  font-weight: var(--font-weight-serif-light);   /* Display/Hero = Light */
   line-height: 1.2;
 }
 .hero__currently {
@@ -103,7 +103,7 @@ a { color: inherit; }
   color: var(--color-text-muted);
 }
 .hero__currently em {
-  font-weight: var(--font-weight-serif-medium);  /* Body/Definition */
+  font-weight: var(--font-weight-serif-light);   /* Heading/H1 Expressive */
   font-style: italic;
 }
 .hero__actions { margin: 0; }
@@ -177,10 +177,10 @@ a { color: inherit; }
   color: var(--color-text-on-light);
 }
 .about .carousel__arrow--next {
-  background: var(--color-text-on-light);
+  background: var(--color-card-surface-ink);
   color: var(--color-text-on-dark);
 }
-.about .carousel__dot[aria-selected="true"] { background: var(--color-text-on-light); }
+.about .carousel__dot[aria-selected="true"] { background: var(--color-card-surface-ink); }
 .about {
   --sheet-ink: var(--color-text-on-dark);
   --sheet-rule: rgb(255 255 255 / .35);
@@ -206,11 +206,11 @@ a { color: inherit; }
 }
 .about--light .carousel { background: var(--color-bg-page); }
 .about--light .carousel__arrow--next {
-  background: var(--color-text-on-light);
+  background: var(--color-card-surface-ink);
   color: var(--color-text-on-dark);
 }
 .about--light .carousel__arrow--next:hover { background: var(--primitive-grey-950); }
-.about--light .carousel__dot[aria-selected="true"] { background: var(--color-text-on-light); }
+.about--light .carousel__dot[aria-selected="true"] { background: var(--color-card-surface-ink); }
 
 /* ───────── section furniture ───────── */
 .eyebrow-chip {
@@ -231,8 +231,8 @@ a { color: inherit; }
 .section-heading {
   max-width: var(--layout-col-main);
   margin: 0 auto var(--space-5xl);
-  font-size: 48px;
-  font-weight: var(--font-weight-serif-thin);
+  font-size: var(--font-size-hero);
+  font-weight: var(--font-weight-serif-light);
   line-height: 1.2;
   text-align: center;
 }
@@ -267,7 +267,7 @@ a { color: inherit; }
 .card__face--front {
   margin: 0;
   font-size: var(--font-size-h1);
-  font-weight: var(--font-weight-serif-thin);    /* Heading/H1 = Thin */
+  font-weight: var(--font-weight-serif-light);   /* Heading/H1 = Light */
   line-height: 1.2;
 }
 .card__media {
@@ -352,7 +352,7 @@ a { color: inherit; }
   /* keep the copy clear of the controls pinned beneath it */
   padding-bottom: calc(var(--size-card-action) + var(--space-lg));
   font-size: var(--font-size-h1);
-  font-weight: var(--font-weight-serif-thin);
+  font-weight: var(--font-weight-serif-light);
   line-height: 1.2;
   /* The media sets the row height (a 288px-wide portrait is ~474px tall at its
      native aspect), and no slide's copy is that long. Centring splits the
