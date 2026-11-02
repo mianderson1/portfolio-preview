@@ -335,6 +335,7 @@ a { color: inherit; }
    controls pinned bottom-left so their baseline matches the media's bottom edge. */
 .carousel {
   position: relative;
+  container-type: inline-size;        /* mobile arrows measure off the card width */
   max-width: var(--layout-content-width);
   margin: 0 auto;
   padding: var(--space-card-pad-large);
@@ -362,7 +363,7 @@ a { color: inherit; }
   margin: 0;
   /* keep the copy clear of the controls pinned beneath it */
   padding-bottom: calc(var(--size-card-action) + var(--space-lg));
-  font-size: var(--font-size-h1);
+  font-size: var(--font-size-h2);
   font-weight: var(--font-weight-serif-light);
   line-height: 1.2;
   /* The media sets the row height (a 288px-wide portrait is ~474px tall at its
@@ -436,11 +437,42 @@ a { color: inherit; }
   /* align-content, not align-items: the slides share one grid cell, so without
      it the auto rows stretch to the tallest slide and tear copy from media */
   .slide,
-  .slide--portrait { grid-template-columns: minmax(0, 1fr); align-content: center; }
+  .slide--portrait { grid-template-columns: minmax(0, 1fr); align-content: end; }
   .slide__copy { padding-bottom: 0; }
-  /* one column, so the portrait sizes off the stacked width again */
+  /* 50.3% puts the portrait on exactly the same height as the landscape slides,
+     so the media box is identical on every slide and the arrows never jump */
   .slide--portrait .slide__media { width: 50.3%; margin-inline: auto; }
-  .carousel__controls { position: static; margin-top: var(--space-lg); }
+
+  .carousel__controls {
+    position: static;
+    margin-top: var(--space-lg);
+    justify-content: center;
+  }
+  .carousel__dots { margin-left: 0; }
+
+  /* Arrows sit in the page gutter, straddling the card edge and centred on the
+     media. The margin is only ~29px at 390 so a 48px control can't clear the
+     card entirely — half of it overlaps, which still keeps it off the text.
+     Media height is a fixed ratio of the media width (572:474), and 100cqw is
+     the card's content box, so container query units find the midpoint without
+     JS: below the media sit the 24px gap, the 8px dot row and 40px of padding.
+     The stack is bottom-aligned so that holds for every slide. */
+  .carousel__arrow {
+    position: absolute;
+    z-index: 2;
+    width: var(--size-carousel-arrow-mobile);
+    height: var(--size-carousel-arrow-mobile);
+    bottom: calc(var(--space-card-pad-large) + 8px + var(--space-lg)
+                 - var(--size-carousel-arrow-mobile) / 2
+                 + 100cqw * 0.414335);
+    box-shadow: 0 2px 10px rgb(0 0 0 / .16);
+  }
+  .carousel__arrow[data-prev] {
+    left: calc(var(--size-carousel-arrow-mobile) / -2);
+    background: var(--color-bg-page);
+  }
+  .carousel__arrow--next { right: calc(var(--size-carousel-arrow-mobile) / -2); }
+  .carousel__arrow svg { width: 22px; height: 11px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -514,11 +546,6 @@ a { color: inherit; }
   .section-heading { font-size: var(--font-size-h1); }
   .slide { grid-template-columns: minmax(0, 1fr); }
   .slide__media { width: 100%; }
-  .slide--portrait .slide__media {
-    width: 62%; height: auto;
-    align-self: center;
-    margin-inline: auto;
-  }
   .sheet { padding-inline: var(--layout-page-margin); }
   .footer-meta > div { flex-direction: column; gap: var(--space-xs); }
 }

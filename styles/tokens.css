@@ -122,6 +122,7 @@
   --space-body-inset: 192px;
   --font-size-hero: 48px;
   --font-size-h1: 33.6px;
+  --font-size-h2: 28px;
   --font-size-h4: 24px;
   --font-size-skill: 20.8px;
   --font-size-h6: 38.4px;
@@ -144,6 +145,7 @@
   --space-card-flip-offset: 24px;
   --space-card-action-inset: 24px;
   --size-card-action: 56px;
+  --size-carousel-arrow-mobile: 48px;
   --size-card-glyph: 20px;
   --layout-card-w: 580px;
   --layout-card-h: 580px;
@@ -186,6 +188,7 @@
     --space-body-inset: 0px;
     --font-size-hero: 40px;
     --font-size-h1: 31.2px;
+    --font-size-h2: 26px;
     --space-card-pad-bottom: 104px;
     --layout-card-w: 331.5px;
     --layout-card-h: 0px;   /* content drives it once the grid is one column */
