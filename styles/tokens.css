@@ -135,6 +135,8 @@
   --font-size-burger: 32px;
   --font-size-close: 60px;
   --radius-card: 24px;
+  --radius-card-large: 36px;        /* skill cards */
+  --space-card-media-inset: 16px;
   --space-card-pad-large: 40px;
   --space-card-pad-default: 12px;
   --space-card-pad-bottom: 120px;
@@ -144,7 +146,7 @@
   --size-card-action: 56px;
   --size-card-glyph: 20px;
   --layout-card-w: 580px;
-  --layout-card-h: 620px;
+  --layout-card-h: 580px;
   --layout-card-gap-x: 64px;
   --layout-card-gap-y: 40px;
   --layout-card-media-h: 240px;
@@ -186,7 +188,7 @@
     --font-size-h1: 31.2px;
     --space-card-pad-bottom: 104px;
     --layout-card-w: 331.5px;
-    --layout-card-h: 640px;
+    --layout-card-h: 0px;   /* content drives it once the grid is one column */
     --layout-card-gap-x: 0px;
     --layout-card-media-h: 148px;
     --layout-card-media-bleed-h: 290px;
