@@ -48,9 +48,46 @@
   const nav = document.getElementById('site-nav');
   if (!nav) return;
 
+  /* Mark the section being read. IntersectionObserver is no good here: the hero
+     is position:sticky, so it reports as visible forever and every section below
+     it would tie. Take the last section whose top has crossed a reading line. */
+  const links = [...nav.querySelectorAll('.site-nav__links a[href^="#"]'),
+                 ...document.querySelectorAll('.nav-popover a[href^="#"]')];
+  const sections = [];
+  for (const a of links) {
+    const href = a.getAttribute('href');
+    if (sections.some(s => s.href === href)) continue;
+    const el = document.querySelector(href);
+    if (el) sections.push({ href, el });
+  }
+
+  let currentHref = null;
+  function spy() {
+    if (!sections.length) return;
+    const line = window.scrollY + window.innerHeight * 0.4;
+    let active = sections[0].href;
+    for (const s of sections) {
+      if (s.el.getBoundingClientRect().top + window.scrollY <= line) active = s.href;
+    }
+    // the last section is shorter than the reading line can reach
+    if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2) {
+      active = sections[sections.length - 1].href;
+    }
+    if (active === currentHref) return;
+    currentHref = active;
+    for (const a of links) {
+      const on = a.getAttribute('href') === active;
+      a.classList.toggle('is-current', on);
+      if (on) a.setAttribute('aria-current', 'location');
+      else a.removeAttribute('aria-current');
+    }
+  }
+
   // a single class toggle is cheap; no rAF throttle needed
-  const update = () =>
+  const update = () => {
     nav.classList.toggle('is-visible', window.scrollY > window.innerHeight * 0.7);
+    spy();
+  };
   addEventListener('scroll', update, { passive: true });
   addEventListener('resize', update, { passive: true });
   update();
