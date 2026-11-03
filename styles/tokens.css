@@ -10,6 +10,7 @@
   --primitive-grey-600: #555555;
   --primitive-grey-500: #7F8C8D;
   --primitive-grey-300: #A1A1A1;
+  --primitive-grey-200: #D8D8D8;
   --primitive-grey-100: #ECECEC;
   --primitive-blue-050: #EDF2FA;
   --primitive-blue-700: #4E74AE;
@@ -83,6 +84,9 @@
   --color-button-solid-bg-on-dark: var(--primitive-white);
   --color-button-solid-bg-on-dark-hover: var(--primitive-grey-100);
   --color-button-ghost-bg-hover-on-light: var(--primitive-grey-100);
+  /* the current section reads as a filled pill, a step darker than the ghost
+     hover so the two states cannot be confused */
+  --color-nav-current-bg: var(--primitive-grey-200);
   --color-button-ghost-bg-hover-on-dark: var(--primitive-grey-950);
 
   /* typography — Edu Arizona */

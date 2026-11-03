@@ -78,12 +78,14 @@ a { color: inherit; }
 }
 .site-nav .btn--ghost.is-current,
 .site-nav .btn--ghost.is-current:hover {
-  background: var(--color-bg-page);
-  /* hairline as well as shadow: the nav glass is already near-white, so a plain
-     white pill has almost no edge against it over the grey sheets */
-  box-shadow: 0 1px 2px rgb(0 0 0 / .10), 0 0 0 1px rgb(0 0 0 / .08);
+  /* filled, not outlined — a white pill needed a hairline and a shadow to
+     show up against near-white glass at all, and still read as a faint
+     outline rather than as a selection */
+  background: var(--color-nav-current-bg);
+  box-shadow: none;
 }
-.nav-popover a.is-current { background: var(--color-button-ghost-bg-hover-on-light); }
+.nav-popover a.is-current,
+.nav-popover a.is-current:hover { background: var(--color-nav-current-bg); }
 
 .btn--avatar { padding: 12px 12px 12px 20px; }
 .btn__dec {
