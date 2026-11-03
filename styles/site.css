@@ -390,10 +390,9 @@ a { color: inherit; }
   font-size: var(--font-size-h2);
   font-weight: var(--font-weight-serif-light);
   line-height: 1.2;
-  /* The media sets the row height (a 288px-wide portrait is ~474px tall at its
-     native aspect), and no slide's copy is that long. Centring splits the
-     leftover space instead of dumping it all below the text. */
-  align-self: center;
+  /* starts at the top of the slide, as in Figma — the leftover space sits
+     under the copy rather than being split around it */
+  align-self: start;
 }
 .slide__media {
   width: 100%;
@@ -465,12 +464,19 @@ a { color: inherit; }
   .slide--portrait .slide__media { width: 100%; aspect-ratio: 1; }
   .slide__copy { padding-bottom: 0; align-self: start; }
 
-  .carousel__controls {
-    position: static;
-    margin-top: var(--space-lg);
+  /* Indicators sit below the card body, not inside it. display:contents on the
+     wrapper rather than positioning it: making the wrapper absolute would turn
+     it into the containing block for the arrows, which have to keep resolving
+     against the card. */
+  .carousel { margin-bottom: calc(var(--space-lg) + 8px); }
+  .carousel__controls { display: contents; }
+  .carousel__dots {
+    position: absolute;
+    left: 0; right: 0;
+    bottom: calc(-1 * (var(--space-lg) + 8px));
+    margin-left: 0;
     justify-content: center;
   }
-  .carousel__dots { margin-left: 0; }
 
   /* Arrows straddle the card edge. The page margin is smaller than the control,
      so half of it overlaps the card — that still keeps it clear of the text.
@@ -529,7 +535,7 @@ a { color: inherit; }
      same height — 100cqw / 1.2068 — and 100cqw is the card's content box. */
   .carousel__arrow {
     top: auto;
-    bottom: calc(var(--space-lg) + 8px + var(--space-lg)
+    bottom: calc(var(--space-lg)
                  - var(--size-carousel-arrow-mobile) / 2
                  + min(100cqw, var(--layout-slide-media-max)) * 0.414335);
   }
