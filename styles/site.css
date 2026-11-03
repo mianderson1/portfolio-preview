@@ -213,15 +213,17 @@ a { color: inherit; }
 .about--light .carousel__dot[aria-selected="true"] { background: var(--color-card-surface-ink); }
 
 /* ───────── section furniture ───────── */
+/* Chivo Mono, and the mono already has the spacing built in — the .08em
+   tracking that was here on top of Inter is what made these read wrong. */
 .eyebrow-chip {
   width: max-content; margin: 0 auto var(--space-lg);
   padding: var(--space-sm) var(--space-md);
   border-radius: var(--radius-pill);
   background: var(--color-accent-dusk-tint);
-  font-family: var(--font-family-sans);
-  font-size: var(--font-size-label);
-  font-weight: var(--font-weight-sans-medium);
-  letter-spacing: .08em; text-transform: uppercase;
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-eyebrow-section);
+  font-weight: var(--font-weight-mono-medium);
+  letter-spacing: 0; text-transform: uppercase;
 }
 .eyebrow-chip--bare {
   background: none; padding-inline: 0;
@@ -267,13 +269,18 @@ a { color: inherit; }
 .card--design-systems { --card-accent: var(--primitive-periwinkle-400); }
 .card--user-research  { --card-accent: var(--primitive-pink-300); }
 .card.is-flipped      { background: var(--card-accent, var(--color-bg-page)); }
-.card--wide { grid-column: 1 / -1; justify-self: center; width: var(--layout-card-w); }
+/* the fifth card is centred, not bigger — pin it to a column width so it keeps
+   matching the other four as the grid narrows */
+.card--wide {
+  grid-column: 1 / -1; justify-self: center;
+  width: calc((100% - var(--layout-card-gap-x)) / 2);
+}
 .card__eyebrow {
   margin: 0;
-  font-family: var(--font-family-sans);
+  font-family: var(--font-family-mono);
   font-size: var(--font-size-eyebrow);
-  font-weight: var(--font-weight-sans-medium);
-  letter-spacing: .08em; text-transform: uppercase;
+  font-weight: var(--font-weight-mono-light);
+  letter-spacing: 0; text-transform: uppercase;
   color: var(--color-text-primary);
 }
 .card__face--front {
@@ -299,10 +306,17 @@ a { color: inherit; }
 }
 
 /* ── flip faces ── */
-.card__stack { position: relative; }
+/* deliberately not a positioning context: the stack is only as tall as the
+   front copy, so the back face resolves against the card and can centre
+   against the whole face instead of against one line of heading */
+.card__stack { position: static; }
 .card__face { margin: 0; transition: opacity .28s ease, visibility .28s; }
 .card__face--back {
-  position: absolute; inset: 0;
+  position: absolute;
+  inset: var(--space-card-pad-large) var(--space-card-pad-large)
+         var(--space-card-media-inset);
+  /* grid rather than block so the copy centres against the full card face */
+  display: grid; align-content: center;
   opacity: 0; pointer-events: none;
   font-size: var(--font-size-body);
   font-weight: var(--font-weight-serif-light);
