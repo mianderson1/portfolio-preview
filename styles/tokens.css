@@ -22,6 +22,9 @@
   --primitive-chartreuse-300: #D2ED82;
   --primitive-periwinkle-400: #8297ED;
   --primitive-pink-300: #F998C9;
+  /* the surface the exported About slide graphics are drawn on, so letterboxing
+     them into a square box is invisible */
+  --color-media-surface: #F3F4F6;
   --primitive-blue-400: #6385B8;
   --primitive-dusk-050: #F3F0FB;
   --primitive-dusk-100: #E5DFF7;
@@ -181,7 +184,7 @@
 
 @media (max-width: 750px) {
   :root {
-    --layout-gutter: 9.75px;
+    --layout-gutter: 24px;   /* 9.75 came from the 390 port and left the slide columns touching */
     /* these were reverse-engineered from a 390px phone; as fixed widths they
        stranded every section at 332px all the way up to 750px */
     --layout-content-width: none;

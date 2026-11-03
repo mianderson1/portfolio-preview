@@ -1,17 +1,3 @@
-/* The mobile hero swaps in a 9:16 encode via <source media>, but `poster` is a
-   single attribute and cannot follow suit — so the landscape still would flash
-   in, cropped badly, before the portrait video paints. */
-(function () {
-  const v = document.querySelector('.hero__media');
-  if (!v) return;
-  const portrait = 'source-images/index-hero-portrait-poster.jpg';
-  const landscape = v.getAttribute('poster');
-  const mq = matchMedia('(max-width: 750px)');
-  const sync = () => { v.poster = mq.matches ? portrait : landscape; };
-  sync();
-  mq.addEventListener('change', sync);
-})();
-
 /* About carousel — no dependencies. */
 (function () {
   const root = document.querySelector('[data-carousel]');
@@ -89,6 +75,10 @@
     }
     if (active === currentHref) return;
     currentHref = active;
+    // the compact bar names the section you are in rather than saying "Sections"
+    const label = nav.querySelector('.site-nav__current');
+    const match = links.find(a => a.getAttribute('href') === active);
+    if (label && match) label.textContent = match.textContent.trim();
     for (const a of links) {
       const on = a.getAttribute('href') === active;
       a.classList.toggle('is-current', on);
@@ -97,10 +87,15 @@
     }
   }
 
+  // the popover anchors above the bar, so it needs the bar's measured height
+  const measure = () =>
+    document.documentElement.style.setProperty('--nav-h', nav.offsetHeight + 'px');
+
   // a single class toggle is cheap; no rAF throttle needed
   const update = () => {
     nav.classList.toggle('is-visible', window.scrollY > window.innerHeight * 0.7);
     spy();
+    measure();
   };
   addEventListener('scroll', update, { passive: true });
   addEventListener('resize', update, { passive: true });

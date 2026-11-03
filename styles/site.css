@@ -154,6 +154,9 @@ a { color: inherit; }
   border-radius: var(--radius-pill); text-decoration: none;
 }
 .nav-popover a:hover { background: var(--color-button-ghost-bg-hover-on-light); }
+/* chevron flips while the sheet is open, so the control reads as a disclosure */
+.site-nav__disclosure[aria-expanded="true"] svg { transform: rotate(180deg); }
+.site-nav__disclosure svg { transition: transform .2s ease; }
 
 /* ───────── glass sheets ───────── */
 .sheet {
@@ -461,7 +464,24 @@ a { color: inherit; }
 @media (max-width: 900px) {
   .carousel { padding: var(--space-lg); }
   .slide--portrait { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-  .slide--portrait .slide__media { width: 100%; aspect-ratio: 1; }
+  /* every slide's media is square here, not just the headshot — the landscape
+     graphics left dead space above and below themselves otherwise. They are
+     letterboxed rather than cropped, onto the same surface they are drawn on,
+     so the extra height reads as part of the graphic. */
+  .slide__media {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: contain;
+    background: var(--color-media-surface);
+  }
+  /* the base .slide--portrait rule is more specific than .slide__media, so the
+     square has to be restated here or the headshot keeps its 288:474 */
+  .slide--portrait .slide__media {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    background: none;
+  }
   .slide__copy { padding-bottom: 0; align-self: start; }
 
   /* Indicators sit below the card body, not inside it. display:contents on the
@@ -516,19 +536,20 @@ a { color: inherit; }
   }
   .slide__copy { align-self: start; }
 
-  /* the media stops growing past --layout-slide-media-max; without it a 600px
-     viewport gives a 480px image, which dwarfs the copy */
-  .slide__media {
-    max-width: var(--layout-slide-media-max);
-    margin-inline: auto;
-  }
-  /* the square is sized off the landscape height so all four match, which
-     means it has to follow the same cap */
+  /* square here too, capped so a 600px viewport does not hand back a 480px
+     image. Every slide is now the same box, so the portrait needs no special
+     sizing — it just crops instead of letterboxing. */
+  .slide__media,
   .slide--portrait .slide__media {
-    width: calc(min(100%, var(--layout-slide-media-max)) / 1.2068);
+    width: 100%;
+    max-width: var(--layout-slide-media-max);
     aspect-ratio: 1;
     margin-inline: auto;
   }
+  /* the grid gap is the gap between copy and image once stacked, and the
+     mobile gutter is too tight for it on the slide with the longest copy */
+  .slide,
+  .slide--portrait { row-gap: var(--space-xl); }
 
   /* back to the media midpoint: the card is tall here, so its centre would
      land in the gap between copy and image. Every slide's media is now the
@@ -537,7 +558,7 @@ a { color: inherit; }
     top: auto;
     bottom: calc(var(--space-lg)
                  - var(--size-carousel-arrow-mobile) / 2
-                 + min(100cqw, var(--layout-slide-media-max)) * 0.414335);
+                 + min(100cqw, var(--layout-slide-media-max)) / 2);
   }
 }
 
@@ -588,10 +609,10 @@ a { color: inherit; }
     height: auto;
     aspect-ratio: 1;
     object-fit: cover;
-    /* measured against the 9:16 encode: the subject runs from 34% down, so a
-       square crop anchored near the bottom frames head and shoulders. Top
-       anchoring cut him off at the eyes. */
-    object-position: center 88%;
+    /* The square block uses the landscape encode, not the 9:16 one: at 1:1 the
+       portrait crop is a tight head shot, while the mock's framing comes from
+       the wide source anchored right. Matched against 418:26951. */
+    object-position: 95% 50%;
     border-radius: var(--radius-card);
     margin-top: var(--space-xl);
   }
@@ -625,11 +646,16 @@ a { color: inherit; }
     color: var(--color-text-primary);
   }
   .site-nav__disclosure svg { width: 12px; height: 8px; }
+  /* sits above the bar it opened from, not over it — --nav-h is measured in JS
+     because the bar's height depends on the wrapped label */
   .nav-popover:popover-open {
-    position: fixed; inset: auto 0 0 0; width: 100%;
-    border-radius: var(--radius-card) var(--radius-card) 0 0;
-    padding: var(--space-lg) var(--layout-page-margin)
-             calc(var(--space-4xl) + env(safe-area-inset-bottom, 0px));
+    position: fixed;
+    inset: auto var(--layout-page-margin)
+           calc(var(--nav-h, 88px) + var(--space-sm) + env(safe-area-inset-bottom, 0px))
+           var(--layout-page-margin);
+    width: auto;
+    border-radius: var(--radius-card);
+    padding: var(--space-sm);
   }
   .nav-popover::backdrop { background: rgb(0 0 0 / .35); }
 
