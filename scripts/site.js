@@ -57,49 +57,24 @@
   });
 
   /* Swipe. The slides are stacked in one grid cell and cross-faded, so there is
-     no native scroller to inherit a gesture from — the pointer is tracked by
-     hand. touch-action: pan-y on the viewport hands us the horizontal axis and
-     keeps vertical scrolling native, so nothing here calls preventDefault and
-     the page never feels stuck. The mouse is left alone: dragging across the
-     copy has to keep selecting text. */
+     no native scroller to inherit a gesture from — the touch is tracked by
+     hand. Touch events rather than pointer events: iOS takes a pointer gesture
+     back with pointercancel the moment it suspects a scroll, while touchmove
+     keeps firing, and touch events never fire for the mouse, so dragging across
+     the copy still selects text. touch-action: pan-y on the viewport leaves
+     vertical scrolling native, so every listener here can stay passive. */
   const viewport = root.querySelector('.carousel__viewport');
-  if (viewport && window.PointerEvent) {
+  if (viewport) {
     const reduce = matchMedia('(prefers-reduced-motion: reduce)');
-    let id = null, x0 = 0, y0 = 0, dx = 0, axis = null;
+    let x0 = 0, y0 = 0, dx = 0, axis = null, tracking = false;
 
     function reset() {
       viewport.classList.remove('is-dragging');
       if (slides[i]) slides[i].style.transform = '';
-      id = null; axis = null; dx = 0;
+      tracking = false; axis = null; dx = 0;
     }
 
-    viewport.addEventListener('pointerdown', e => {
-      if (e.pointerType === 'mouse' || id !== null) return;
-      id = e.pointerId; x0 = e.clientX; y0 = e.clientY; dx = 0; axis = null;
-    });
-
-    viewport.addEventListener('pointermove', e => {
-      if (e.pointerId !== id) return;
-      dx = e.clientX - x0;
-      const dy = e.clientY - y0;
-      if (!axis) {
-        if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;   // too small to call
-        axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
-        if (axis !== 'x') return;
-        viewport.classList.add('is-dragging');
-        // keep receiving moves even if the finger leaves the card
-        try { viewport.setPointerCapture(id); } catch (err) { /* not fatal */ }
-      }
-      if (axis !== 'x' || reduce.matches) return;
-      // Damped and capped. The slide carries the card's colour field, so
-      // travelling any further would open a white gap at the rounded edge —
-      // 28px reads as the card resisting rather than as a broken layout.
-      const shift = Math.max(-28, Math.min(28, dx * 0.3));
-      if (slides[i]) slides[i].style.transform = 'translateX(' + shift + 'px)';
-    });
-
-    viewport.addEventListener('pointerup', e => {
-      if (e.pointerId !== id) return;
+    function commit() {
       const travelled = dx, swiped = axis === 'x';
       reset();
       if (!swiped) return;
@@ -107,11 +82,35 @@
       const threshold = Math.min(45, viewport.offsetWidth * 0.1);
       if (travelled <= -threshold) go(i + 1);
       else if (travelled >= threshold) go(i - 1);
-    });
+    }
 
-    viewport.addEventListener('pointercancel', e => {
-      if (e.pointerId === id) reset();
-    });
+    viewport.addEventListener('touchstart', e => {
+      if (e.touches.length > 1) { reset(); return; }      // leave pinch-zoom alone
+      x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+      dx = 0; axis = null; tracking = true;
+    }, { passive: true });
+
+    viewport.addEventListener('touchmove', e => {
+      if (!tracking) return;
+      if (e.touches.length > 1) { reset(); return; }
+      dx = e.touches[0].clientX - x0;
+      const dy = e.touches[0].clientY - y0;
+      if (!axis) {
+        if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;  // too small to call
+        axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+        if (axis === 'x') viewport.classList.add('is-dragging');
+      }
+      if (axis !== 'x' || reduce.matches) return;
+      // Damped and capped. The slide carries the card's colour field, so
+      // travelling any further would open a gap at the rounded edge — 28px
+      // reads as the card resisting rather than as a broken layout.
+      const shift = Math.max(-28, Math.min(28, dx * 0.3));
+      if (slides[i]) slides[i].style.transform = 'translateX(' + shift + 'px)';
+    }, { passive: true });
+
+    viewport.addEventListener('touchend', () => { if (tracking) commit(); }, { passive: true });
+    // iOS cancels if it takes the gesture over; honour a swipe already made
+    viewport.addEventListener('touchcancel', () => { if (tracking) commit(); }, { passive: true });
   }
 
   go(i);

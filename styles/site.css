@@ -399,8 +399,14 @@ a { color: inherit; }
 
 .carousel__viewport {
   display: grid;
-  /* hand the horizontal axis to the swipe handler and keep vertical scrolling
-     (and pinch-zoom) native, so no preventDefault is needed in the listener */
+  /* Hand the horizontal axis to the swipe handler and keep vertical scrolling
+     native, so no preventDefault is needed in the listener. Declared twice on
+     purpose: Safari does not appear to parse the pinch-zoom keyword, and a
+     single unknown token invalidates the whole declaration — which would leave
+     iOS on `auto`, where the browser claims every horizontal gesture and the
+     swipe never fires. The plain value lands first so Safari keeps pan-y;
+     anything that does parse the second keeps pinch-zoom as well. */
+  touch-action: pan-y;
   touch-action: pan-y pinch-zoom;
 }
 .carousel__viewport.is-dragging { user-select: none; }
