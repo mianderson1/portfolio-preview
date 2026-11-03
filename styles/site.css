@@ -498,13 +498,28 @@ a { color: inherit; }
 @media (max-width: 700px) {
   /* align-content, not align-items: the slides share one grid cell, so without
      it the auto rows stretch to the tallest slide and tear copy from media */
+  /* rows rather than align-content: the leftover space goes to row 1, so every
+     slide's copy starts at the same top edge and every slide's media still
+     lands on the same bottom edge. align-content:end did the second but let
+     the copy float down whenever a slide ran short. */
   .slide,
-  .slide--portrait { grid-template-columns: minmax(0, 1fr); align-content: end; }
+  .slide--portrait {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 1fr auto;
+    align-content: stretch;
+  }
+  .slide__copy { align-self: start; }
 
-  /* stacked, the square would run the full card width and tower over the
-     landscape slides, so size it off their height instead */
+  /* the media stops growing past --layout-slide-media-max; without it a 600px
+     viewport gives a 480px image, which dwarfs the copy */
+  .slide__media {
+    max-width: var(--layout-slide-media-max);
+    margin-inline: auto;
+  }
+  /* the square is sized off the landscape height so all four match, which
+     means it has to follow the same cap */
   .slide--portrait .slide__media {
-    width: calc(100% / 1.2068);
+    width: calc(min(100%, var(--layout-slide-media-max)) / 1.2068);
     aspect-ratio: 1;
     margin-inline: auto;
   }
@@ -516,7 +531,7 @@ a { color: inherit; }
     top: auto;
     bottom: calc(var(--space-lg) + 8px + var(--space-lg)
                  - var(--size-carousel-arrow-mobile) / 2
-                 + 100cqw * 0.414335);
+                 + min(100cqw, var(--layout-slide-media-max)) * 0.414335);
   }
 }
 
@@ -544,18 +559,44 @@ a { color: inherit; }
 
 /* ───────── mobile ───────── */
 @media (max-width: 750px) {
-  /* hero stays full bleed, fed by a 9:16 encode so the crop is a composition, not an accident */
+  /* The hero stops being a full-bleed background here. Copy sits on white and
+     the video becomes a square block below it, matching the square media the
+     cards and carousel already use. Nothing is pinned, so no sticky and no
+     text-shadow to hold legibility over video. */
   .hero {
-    min-height: 100svh;              /* a full-bleed hero is one viewport, not 1350px */
-    padding-top: var(--space-6xl);
-    align-items: flex-end;
-    padding-bottom: calc(var(--space-4xl) + 88px);  /* clear the bottom bar */
+    position: static;
+    min-height: 0;
+    overflow: visible;
+    flex-direction: column;
+    align-items: stretch;
+    padding: var(--space-5xl) var(--layout-page-margin) var(--space-4xl);
   }
-  .hero__media, .hero__still { object-position: center top; }
-  .hero__heading { text-shadow: 0 1px 24px rgb(255 255 255 / .55); }
-  /* the bottom bar owns this space, and a one-viewport hero already implies "scroll" */
+  .hero__intro { order: 1; max-width: none; }
+  .hero__media,
+  .hero__still {
+    order: 2;
+    position: static;
+    inset: auto;
+    z-index: auto;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    /* measured against the 9:16 encode: the subject runs from 34% down, so a
+       square crop anchored near the bottom frames head and shoulders. Top
+       anchoring cut him off at the eyes. */
+    object-position: center 88%;
+    border-radius: var(--radius-card);
+    margin-top: var(--space-xl);
+  }
+  .hero__heading { margin-bottom: var(--space-lg); text-shadow: none; }
+  .hero__currently {
+    margin-bottom: var(--space-xl);
+    font-size: var(--font-size-h4);
+    color: var(--color-text-on-light);
+  }
+  /* the bottom bar owns this space, and the video already implies "scroll" */
   .scroll-cue { display: none; }
-  .hero__intro { max-width: none; }
 
   /* nav becomes a full-width bar pinned to the bottom */
   .site-nav {

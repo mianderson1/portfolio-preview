@@ -159,6 +159,7 @@
   --space-card-action-inset: 24px;
   --size-card-action: 56px;
   --size-carousel-arrow-mobile: 48px;
+  --layout-slide-media-max: 340px;   /* stacked slides stop growing here */
   --size-card-glyph: 20px;
   --layout-card-w: 580px;
   --layout-card-h: 580px;
@@ -200,7 +201,7 @@
     --layout-nav-height: 844px;
     --space-stack-hero: 33.6px;
     --space-body-inset: 0px;
-    --font-size-hero: 40px;
+    --font-size-hero: 32px;
     --font-size-h1: 31.2px;
     --space-card-pad-bottom: 104px;
     --layout-card-w: 100%;

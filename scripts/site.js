@@ -1,3 +1,17 @@
+/* The mobile hero swaps in a 9:16 encode via <source media>, but `poster` is a
+   single attribute and cannot follow suit — so the landscape still would flash
+   in, cropped badly, before the portrait video paints. */
+(function () {
+  const v = document.querySelector('.hero__media');
+  if (!v) return;
+  const portrait = 'source-images/index-hero-portrait-poster.jpg';
+  const landscape = v.getAttribute('poster');
+  const mq = matchMedia('(max-width: 750px)');
+  const sync = () => { v.poster = mq.matches ? portrait : landscape; };
+  sync();
+  mq.addEventListener('change', sync);
+})();
+
 /* About carousel — no dependencies. */
 (function () {
   const root = document.querySelector('[data-carousel]');
