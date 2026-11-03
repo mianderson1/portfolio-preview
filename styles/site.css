@@ -464,6 +464,10 @@ a { color: inherit; }
   aspect-ratio: 572 / 474;                   /* the landscape graphics */
   object-fit: cover;
   border-radius: var(--radius-card);
+  /* The graphics are transparent PNGs, so the slide's accent carries straight
+     through as the field — the same colour the card gets below 700, without a
+     second set of exports. The portrait has no accent and stays on the card. */
+  background: var(--slide-accent, transparent);
 }
 /* The intro slide reads better with a wide measure, so it doesn't split 50/50.
    Its media column is sized to land the portrait on exactly the row height the
@@ -537,8 +541,10 @@ a { color: inherit; }
                 rgb(255 255 255 / 0) 0%, rgb(255 255 255 / .8) 50%);
     backdrop-filter: blur(12px);
   }
+  /* fixed white, not --color-bg-page: that token flips to black inside the
+     dark .about sheet, which left the prev arrow black with a dark glyph */
   .carousel__controls .carousel__arrow {
-    background: var(--color-bg-page);
+    background: var(--primitive-white);
     border-color: var(--color-card-border);
     color: var(--color-text-on-light);
   }
@@ -568,7 +574,9 @@ a { color: inherit; }
     width: 100%;
     aspect-ratio: 1;
     object-fit: contain;
-    background: var(--color-media-surface);
+    /* letterboxed onto the accent rather than the neutral surface, so the
+       extra height still reads as part of the graphic */
+    background: var(--slide-accent, var(--color-media-surface));
   }
   /* the base .slide--portrait rule is more specific than .slide__media, so the
      square has to be restated here or the headshot keeps its 288:474 */
@@ -628,6 +636,9 @@ a { color: inherit; }
      margin and peek. The carousel is no longer the card — each slide is — so
      its border, fill and radius come off here. */
   .carousel {
+    /* the inner width the card's own border leaves behind, which is what the
+       artwork square has to match */
+    --slide-card-inner: calc(var(--slide-card-w) - 2 * var(--size-border-width));
     /* One source of truth for the card width. An element cannot query itself,
        so every cqw below resolves against this full-bleed carousel — which is
        exactly why the width has to be named once and reused, rather than each
@@ -663,6 +674,9 @@ a { color: inherit; }
   .slide--portrait {
     border-radius: var(--radius-card);
     overflow: hidden;
+    /* the hairline used to be on .carousel, which drew it around the card.
+       The slide is the card now, so it carries its own. */
+    border: var(--size-border-width) solid var(--color-card-border);
     /* The carousel no longer paints the card, so each slide carries its own
        field. The fallback has to be a fixed white, not --color-bg-page: that
        token flips to black inside the dark .about sheet, which turned slide 1
@@ -672,7 +686,7 @@ a { color: inherit; }
     /* the image region is square: the card's inner width, less its 1px border */
     /* 1fr, not auto: row 2 then absorbs the slack so every slide's panel is the
        same height as the tallest without measuring any of them */
-    grid-template-rows: var(--slide-card-w) 1fr;
+    grid-template-rows: var(--slide-card-inner) 1fr;
     row-gap: 0;
     align-self: stretch;
   }
@@ -692,7 +706,7 @@ a { color: inherit; }
     /* sits above centre, as drawn: 22 of a 332 field on 438:11100, kept as a
        ratio so it holds when the card grows to its 420 cap */
     align-self: start;
-    margin-top: calc(var(--slide-card-w) * 0.0663);
+    margin-top: calc(var(--slide-card-inner) * 0.0663);
     margin-inline: auto;
     border-radius: var(--radius-slide-art);
     background: none;
@@ -708,7 +722,7 @@ a { color: inherit; }
     top: 0; left: 0;
     margin-top: 0;          /* the shared rule's top bias must not apply here */
     width: 100%;
-    height: calc(var(--slide-card-w) + var(--radius-card));
+    height: calc(var(--slide-card-inner) + var(--radius-card));
     object-fit: cover;
     border-radius: 0;
   }
