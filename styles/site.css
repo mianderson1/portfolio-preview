@@ -106,15 +106,22 @@ a { color: inherit; }
   overflow: hidden;
 }
 .hero__media, .hero__still {
-  /* fixed and viewport-tall, matching the live site. Covering the hero's full
-     1000px instead took 180px off each side rather than 90 and scaled the
-     figure up, which is what pushed him into the bottom-right corner. */
-  position: fixed; inset: 0;
-  width: 100%; height: 100vh; object-fit: cover; z-index: -1;
+  /* Absolute, not fixed. Fixed matched the live site's framing but escapes
+     the hero's overflow and repaints against the scroll, so it flickered
+     through as you moved. The hero is viewport-tall instead, which gives the
+     media the same box to cover without anything leaving the flow. */
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover; z-index: -1;
 }
 
 /* The hero fades into the surface below it rather than being overlapped by it
    — Figma 377:24925, where the gradient runs the bottom 141 of an 800 hero. */
+@media (min-width: 751px) {
+  /* covering this instead of a fixed 1000px is what keeps the crop at 90px a
+     side rather than 180 — the framing the live site gets */
+  .hero { min-height: 100vh; }
+}
+
 .hero::after {
   content: "";
   position: absolute;
@@ -129,7 +136,9 @@ a { color: inherit; }
 .hero__heading {
   margin: 0 0 var(--space-2xl);
   font-size: var(--font-size-hero);
-  font-weight: var(--font-weight-serif-light);   /* Display/Hero = Light */
+  /* Figma binds this to font/style/serif-thin — ExtraLight under the
+     Substitute mode it renders in, Thin in real Edu Arizona */
+  font-weight: var(--font-weight-serif-thin);
   line-height: 1.2;
 }
 .hero__currently {
@@ -296,7 +305,7 @@ a { color: inherit; }
   max-width: var(--layout-col-main);
   margin: 0 auto var(--space-5xl);
   font-size: var(--font-size-hero);
-  font-weight: var(--font-weight-serif-light);
+  font-weight: var(--font-weight-serif-thin);   /* serif-thin, as the hero */
   line-height: 1.2;
   text-align: center;
 }
