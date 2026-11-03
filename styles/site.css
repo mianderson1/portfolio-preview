@@ -219,17 +219,18 @@ a { color: inherit; }
 /* Chivo Mono, and the mono already has the spacing built in — the .08em
    tracking that was here on top of Inter is what made these read wrong. */
 .eyebrow-chip {
+  /* plain centred text, not a tag — 377:24941 draws it as an outline button
+     with no fill and no stroke, which is just the label */
   width: max-content; margin: 0 auto var(--space-lg);
-  padding: var(--space-sm) var(--space-md);
-  border-radius: var(--radius-pill);
-  background: var(--color-accent-dusk-tint);
   font-family: var(--font-family-mono);
   font-size: var(--font-size-eyebrow-section);
   font-weight: var(--font-weight-mono-medium);
   letter-spacing: 0; text-transform: uppercase;
+  color: var(--color-text-primary);
 }
+/* the About eyebrow sits on a sheet, so it takes the sheet's ink and keeps the
+   underline it has in Figma; the Skills one has neither */
 .eyebrow-chip--bare {
-  background: none; padding-inline: 0;
   color: var(--sheet-ink, var(--color-text-on-dark));
   text-decoration: underline; text-underline-offset: 4px;
 }
