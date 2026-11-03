@@ -202,7 +202,6 @@
     --space-body-inset: 0px;
     --font-size-hero: 40px;
     --font-size-h1: 31.2px;
-    --font-size-h2: 26px;
     --space-card-pad-bottom: 104px;
     --layout-card-w: 100%;
     --layout-card-h: 0px;   /* content drives it once the grid is one column */
@@ -229,4 +228,10 @@
   --color-accent-dusk-tint: var(--primitive-dusk-600);
   --color-accent-dusk-anchor: var(--primitive-dusk-200);
   --color-accent-dusk-ink: var(--primitive-dusk-050);
+}
+
+/* Below 900 the slide columns are ~300px — too narrow for 28px display type.
+   One step down rather than a fluid scale, so the size stays nameable. */
+@media (max-width: 900px) {
+  :root { --font-size-h2: 22px; }
 }
