@@ -48,20 +48,34 @@ a { color: inherit; }
   line-height: 1.25;
   text-decoration: none;
   border: var(--size-border-width) solid transparent;
-  transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease,
+              transform .12s ease;
 }
 .btn--solid {
   background: var(--color-button-solid-bg-on-light);
   color: var(--color-text-on-dark);
 }
-.btn--solid:hover { background: var(--color-button-solid-bg-on-light-hover); }
 .btn--ghost { background: transparent; color: var(--color-text-on-light); }
-.btn--ghost:hover { background: var(--color-button-ghost-bg-hover-on-light); }
+
+/* Hover is a pointer affordance, and a touch device keeps :hover applied after
+   a tap until you tap something else — which is what left the CTA looking
+   stuck. Behind this guard, touch never enters the state at all. The press is
+   tied to the gesture instead: :active ends the moment the finger lifts, so it
+   clears itself and no timer has to decide when to release it. */
+@media (hover: hover) {
+  .btn--solid:hover { background: var(--color-button-solid-bg-on-light-hover); }
+  .btn--ghost:hover { background: var(--color-button-ghost-bg-hover-on-light); }
+}
+.btn:active { transform: scale(.97); }
+.btn--solid:active { background: var(--color-button-solid-bg-on-light-hover); }
+.btn--ghost:active { background: var(--color-button-ghost-bg-hover-on-light); }
 
 /* Current section. A raised white pill against the 80%-white glass reads as
    selected without competing with the solid Contact CTA, and the label weight
    is unchanged so the nav never resizes as you scroll. */
-.site-nav .btn--ghost { transition: background-color .2s ease, box-shadow .2s ease; }
+.site-nav .btn--ghost {
+  transition: background-color .2s ease, box-shadow .2s ease, transform .12s ease;
+}
 .site-nav .btn--ghost.is-current,
 .site-nav .btn--ghost.is-current:hover {
   background: var(--color-bg-page);
@@ -171,7 +185,9 @@ a { color: inherit; }
   display: block; padding: var(--space-md) var(--space-lg);
   border-radius: var(--radius-pill); text-decoration: none;
 }
-.nav-popover a:hover { background: var(--color-button-ghost-bg-hover-on-light); }
+@media (hover: hover) {
+  .nav-popover a:hover { background: var(--color-button-ghost-bg-hover-on-light); }
+}
 /* chevron flips while the sheet is open, so the control reads as a disclosure */
 .site-nav__disclosure[aria-expanded="true"] svg { transform: rotate(180deg); }
 .site-nav__disclosure svg { transition: transform .2s ease; }
@@ -234,7 +250,9 @@ a { color: inherit; }
   background: var(--color-card-surface-ink);
   color: var(--color-text-on-dark);
 }
-.about--light .carousel__arrow--next:hover { background: var(--primitive-grey-950); }
+@media (hover: hover) {
+  .about--light .carousel__arrow--next:hover { background: var(--primitive-grey-950); }
+}
 .about--light .carousel__dot[aria-selected="true"] { background: var(--color-card-surface-ink); }
 
 /* ───────── section furniture ───────── */
@@ -484,15 +502,21 @@ a { color: inherit; }
   border-radius: 50%; cursor: pointer;
   background: none; color: var(--sheet-ink);
   border: var(--size-border-width) solid var(--sheet-rule);
-  transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease,
+              transform .12s ease;
 }
-.carousel__arrow:hover { background: var(--sheet-hover); }
+@media (hover: hover) {
+  .carousel__arrow:hover { background: var(--sheet-hover); }
+}
+.carousel__arrow:active { transform: scale(.94); }
 .carousel__arrow--next {
   background: var(--color-text-on-dark);
   color: var(--color-text-on-light);
   border-color: transparent;
 }
-.carousel__arrow--next:hover { background: var(--primitive-grey-100); }
+@media (hover: hover) {
+  .carousel__arrow--next:hover { background: var(--primitive-grey-100); }
+}
 .carousel__arrow svg { width: 26px; height: 13px; }
 .carousel__dots { display: flex; gap: 10px; margin-left: var(--space-sm); }
 .carousel__dot {
@@ -734,7 +758,14 @@ a { color: inherit; }
   /* nav becomes a full-width bar pinned to the bottom */
   .site-nav {
     top: auto; bottom: 0; left: 0;
-    transform: translateY(12px);
+    /* Move in, rather than dissolve. A 12px nudge under a fade read as a
+       cross-dissolve; the bar now travels its whole height up from under the
+       edge and stays opaque the whole way, so it arrives rather than appears.
+       Reduced motion is already covered by the blanket transition-duration
+       override further down, which snaps it into place instead. */
+    transform: translateY(100%);
+    opacity: 1;
+    transition: transform .32s cubic-bezier(.22, .61, .24, 1), visibility .32s;
     width: 100%; border-radius: 0;
     justify-content: space-between;
     padding: var(--space-md) var(--layout-page-margin)
@@ -828,8 +859,10 @@ a { color: inherit; }
   transition: opacity .3s ease;
   pointer-events: none;
 }
-.has-ring:hover::after,
 .has-ring:focus-visible::after { opacity: 1; animation: ring-spin 3.2s linear infinite; }
+@media (hover: hover) {
+  .has-ring:hover::after { opacity: 1; animation: ring-spin 3.2s linear infinite; }
+}
 
 @keyframes ring-spin { to { --grad-angle: 360deg; } }
 
@@ -850,8 +883,10 @@ a { color: inherit; }
               opacity .22s ease;
 }
 .btn__icon svg { width: 18px; height: 18px; flex: none; }
-.btn:hover .btn__icon,
 .btn:focus-visible .btn__icon { width: 18px; margin-left: var(--space-sm); opacity: 1; }
+@media (hover: hover) {
+  .btn:hover .btn__icon { width: 18px; margin-left: var(--space-sm); opacity: 1; }
+}
 
 /* the nav button already carries the avatar, so swap it rather than add to it */
 .btn__dec { position: relative; }
@@ -861,13 +896,17 @@ a { color: inherit; }
   opacity: 0; transition: opacity .25s ease;
   color: var(--color-text-on-light);
 }
-.btn--avatar:hover .btn__dec svg { opacity: 1; }
-.btn--avatar:hover .btn__dec { background-color: #fff; }
+@media (hover: hover) {
+  .btn--avatar:hover .btn__dec svg { opacity: 1; }
+  .btn--avatar:hover .btn__dec { background-color: #fff; }
+}
 .btn--avatar .btn__dec::after {
   content: ""; position: absolute; inset: 0; border-radius: 50%;
   background: #fff; opacity: 0; transition: opacity .25s ease;
 }
-.btn--avatar:hover .btn__dec::after { opacity: .88; }
+@media (hover: hover) {
+  .btn--avatar:hover .btn__dec::after { opacity: .88; }
+}
 .btn--avatar .btn__dec svg { z-index: 1; }
 
 /* ───────── flip card hover ───────── */
