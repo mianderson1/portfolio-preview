@@ -49,7 +49,7 @@ a { color: inherit; }
   text-decoration: none;
   border: var(--size-border-width) solid transparent;
   transition: background-color .2s ease, color .2s ease, border-color .2s ease,
-              transform .12s ease;
+              scale .12s ease;
 }
 .btn--solid {
   background: var(--color-button-solid-bg-on-light);
@@ -66,7 +66,7 @@ a { color: inherit; }
   .btn--solid:hover { background: var(--color-button-solid-bg-on-light-hover); }
   .btn--ghost:hover { background: var(--color-button-ghost-bg-hover-on-light); }
 }
-.btn:active { transform: scale(.97); }
+.btn:active { scale: .97; }
 .btn--solid:active { background: var(--color-button-solid-bg-on-light-hover); }
 .btn--ghost:active { background: var(--color-button-ghost-bg-hover-on-light); }
 
@@ -74,7 +74,7 @@ a { color: inherit; }
    selected without competing with the solid Contact CTA, and the label weight
    is unchanged so the nav never resizes as you scroll. */
 .site-nav .btn--ghost {
-  transition: background-color .2s ease, box-shadow .2s ease, transform .12s ease;
+  transition: background-color .2s ease, box-shadow .2s ease, scale .12s ease;
 }
 .site-nav .btn--ghost.is-current,
 .site-nav .btn--ghost.is-current:hover {
@@ -499,12 +499,19 @@ a { color: inherit; }
   background: none; color: var(--sheet-ink);
   border: var(--size-border-width) solid var(--sheet-rule);
   transition: background-color .2s ease, color .2s ease, border-color .2s ease,
-              transform .12s ease;
+              scale .12s ease;
 }
 @media (hover: hover) {
   .carousel__arrow:hover { background: var(--sheet-hover); }
 }
-.carousel__arrow:active { transform: scale(.94); }
+/* Composed, not replaced. The press used to be a bare scale(), which wiped
+   out the translateY(-50%) that centres the arrow below 700 — so a tap
+   dropped it half its own height, and :active sticks on touch, so it stayed
+   there. Both parts now live in the same transform. */
+.carousel__arrow { transform: translateY(var(--arrow-y, 0)); }
+/* the independent scale property, not a transform: it composes with the
+   translateY above instead of replacing it */
+.carousel__arrow:active { scale: .94; }
 .carousel__arrow--next {
   background: var(--color-text-on-dark);
   color: var(--color-text-on-light);
@@ -756,7 +763,7 @@ a { color: inherit; }
   .carousel__arrow {
     top: calc(var(--slide-card-w) / 2);
     bottom: auto;
-    transform: translateY(-50%);
+    --arrow-y: -50%;
     z-index: 2;
   }
   .carousel__arrow[data-prev] {
