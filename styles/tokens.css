@@ -26,6 +26,7 @@
      them into a square box is invisible */
   --color-media-surface: #F3F4F6;
   --color-slide-panel: #FBFBFB;      /* the copy panel on mobile slides */
+  --layout-slide-card-max: 420px;    /* the card stops growing here on mobile */
   --radius-slide-art: 13px;
   --primitive-blue-400: #6385B8;
   --primitive-dusk-050: #F3F0FB;
