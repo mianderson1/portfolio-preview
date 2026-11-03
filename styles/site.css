@@ -724,10 +724,54 @@ a { color: inherit; }
     line-height: 1.5;
   }
 
-  /* The arrows go. At 48px hanging half outside the card they sat squarely on
-     the peeking neighbour, and with a real track the swipe and the dots carry
-     it. Delete this rule to bring them back. */
-  .carousel__arrow { display: none; }
+  /* Arrows straddle the card edge, as they did before the track. The carousel
+     is full-bleed now, so they can no longer be offset from its own edge —
+     they hang off the card, which is centred inside it. z-index keeps them
+     over the edge treatment below, so they never pick up its blur. */
+  .carousel__arrow {
+    top: 50%;
+    bottom: auto;
+    transform: translateY(-50%);
+    z-index: 2;
+  }
+  .carousel__arrow[data-prev] {
+    left: calc((100% - var(--slide-card-w)) / 2
+               - var(--size-carousel-arrow-mobile) / 2);
+  }
+  .carousel__arrow--next {
+    right: calc((100% - var(--slide-card-w)) / 2
+                - var(--size-carousel-arrow-mobile) / 2);
+  }
+
+  /* Soften the peek. The scroller is masked so a neighbour fades out instead
+     of ending on a cut, and a blurred strip sits over the same band so the
+     sliver reads as out of focus rather than sliced. The two edges share one
+     pseudo-element each; the right is the left, mirrored. */
+  .carousel__viewport {
+    --edge: calc(var(--layout-slide-peek) + var(--layout-slide-peek-gap));
+    -webkit-mask-image: linear-gradient(to right,
+        transparent 0, #000 var(--edge),
+        #000 calc(100% - var(--edge)), transparent 100%);
+    mask-image: linear-gradient(to right,
+        transparent 0, #000 var(--edge),
+        #000 calc(100% - var(--edge)), transparent 100%);
+  }
+  .carousel::before,
+  .carousel::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: calc(var(--layout-slide-peek) + var(--layout-slide-peek-gap));
+    pointer-events: none;
+    z-index: 1;
+    backdrop-filter: blur(5px);
+    /* ramp the blur out, or it just trades one hard edge for another */
+    -webkit-mask-image: linear-gradient(to right, #000 35%, transparent 100%);
+    mask-image: linear-gradient(to right, #000 35%, transparent 100%);
+  }
+  .carousel::before { left: 0; }
+  .carousel::after { right: 0; transform: scaleX(-1); }
 
 }
 
