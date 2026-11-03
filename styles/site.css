@@ -321,9 +321,10 @@ a { color: inherit; }
   /* grid rather than block so the copy centres against the full card face */
   display: grid; align-content: center;
   opacity: 0; pointer-events: none;
+  font-family: var(--font-family-grotesk);
   font-size: var(--font-size-body);
-  font-weight: var(--font-weight-serif-light);
-  line-height: 1.4;
+  font-weight: var(--font-weight-grotesk-light);
+  line-height: 1.5;
 }
 .card.is-flipped .card__face--front { opacity: 0; visibility: hidden; }
 .card.is-flipped .card__face--back  { opacity: 1; pointer-events: auto; }
@@ -366,6 +367,7 @@ a { color: inherit; }
   max-width: var(--layout-content-width);
   margin: 0 auto;
   padding: var(--space-card-pad-large);
+  border: var(--size-border-width) solid var(--color-card-border);
   border-radius: var(--radius-card);
   background: var(--color-bg-page);          /* white, same as the flip cards */
 }
@@ -390,9 +392,11 @@ a { color: inherit; }
   margin: 0;
   /* keep the copy clear of the controls pinned beneath it */
   padding-bottom: calc(var(--size-card-action) + var(--space-lg));
+  font-family: var(--font-family-grotesk);
   font-size: var(--font-size-h2);
-  font-weight: var(--font-weight-serif-light);
-  line-height: 1.2;
+  font-weight: var(--font-weight-grotesk-light);
+  /* 1.2 was set for the serif; the grotesk needs more room between lines */
+  line-height: 1.35;
   /* starts at the top of the slide, as in Figma — the leftover space sits
      under the copy rather than being split around it */
   align-self: start;

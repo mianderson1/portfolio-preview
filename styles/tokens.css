@@ -82,6 +82,10 @@
   --font-family-sans: "EduArizonaSans", system-ui, sans-serif;
   /* eyebrows only — Figma sets these in Chivo Mono, not the sans */
   --font-family-mono: "ChivoMono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* long-form body copy, to break up the serif. Helvetica Neue is a system
+     face — Light resolves on Apple devices, Arial Regular elsewhere. */
+  --font-family-grotesk: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-weight-grotesk-light: 300;
   --font-weight-serif-thin: 100;
   --font-weight-serif-light: 300;
   --font-weight-serif-regular: 400;
