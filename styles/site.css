@@ -120,6 +120,20 @@ a { color: inherit; }
   /* covering this instead of a fixed 1000px is what keeps the crop at 90px a
      side rather than 180 — the framing the live site gets */
   .hero { min-height: 100vh; }
+
+  /* One content column for the whole page. The sections looked
+     wider-margined than the hero not because their padding differed — it is
+     the same token — but because their content is capped at
+     --layout-content-width and centred, which lands the edge at ~101px rather
+     than the 48px page margin. The hero and the header now share that edge,
+     falling back to the plain margin once the viewport is narrower than the
+     cap. The footer already aligned: .footer-meta is capped and centred. */
+  :root {
+    --layout-content-inset: max(var(--layout-page-margin),
+                                calc((100% - var(--layout-content-width)) / 2));
+  }
+  .hero { padding-inline: var(--layout-content-inset); }
+  .site-header { padding-inline: var(--layout-content-inset); }
 }
 
 .hero::after {
@@ -132,7 +146,14 @@ a { color: inherit; }
   pointer-events: none;
 }
 .hero__still { display: none; }
-.hero__intro { max-width: var(--layout-intro-width); }
+/* An explicit width, not just a cap. As a flex item this was shrink-to-fit,
+   and the line-reveal rewrites the heading into block-level spans — so its
+   max-content width became the longest line already broken, and the column
+   settled at 599px instead of the 685 it was mocked at. */
+.hero__intro {
+  width: var(--layout-intro-width);
+  max-width: 100%;
+}
 .hero__heading {
   margin: 0 0 var(--space-2xl);
   font-size: var(--font-size-hero);
@@ -874,7 +895,7 @@ a { color: inherit; }
     align-items: stretch;
     padding: var(--space-5xl) var(--layout-page-margin) var(--space-4xl);
   }
-  .hero__intro { order: 1; max-width: none; }
+  .hero__intro { order: 1; width: auto; max-width: none; }
   .hero__media,
   .hero__still {
     order: 2;
