@@ -393,6 +393,12 @@ a { color: inherit; }
 }
 .slide.is-current { opacity: 1; visibility: visible; }
 
+/* each slide carries its own field colour; only the mobile layout paints it */
+.slide--pink { --slide-accent: var(--primitive-pink-300); }
+.slide--gold { --slide-accent: var(--primitive-gold-400); }
+.slide--lime { --slide-accent: var(--primitive-chartreuse-300); }
+
+
 .slide__copy {
   margin: 0;
   /* keep the copy clear of the controls pinned beneath it */
@@ -533,42 +539,66 @@ a { color: inherit; }
 @media (max-width: 700px) {
   /* align-content, not align-items: the slides share one grid cell, so without
      it the auto rows stretch to the tallest slide and tear copy from media */
-  /* rows rather than align-content: the leftover space goes to row 1, so every
-     slide's copy starts at the same top edge and every slide's media still
-     lands on the same bottom edge. align-content:end did the second but let
-     the copy float down whenever a slide ran short. */
+  /* Figma 438:11100 — the card's interior is one coloured field running the
+     full height, with the artwork floating in the upper square and the copy in
+     a rounded panel at the bottom. The card's own clip does the rounding, so
+     the field itself is square-cornered. */
+  .carousel { padding: 0; overflow: hidden; }
   .slide,
   .slide--portrait {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: 1fr auto;
-    align-content: stretch;
+    /* the image region is square: the card's inner width, less its 1px border */
+    /* 1fr, not auto: row 2 then absorbs the slack so every slide's panel is the
+       same height as the tallest without measuring any of them */
+    grid-template-rows: calc(100cqw - 2px) 1fr;
+    row-gap: 0;
+    align-self: stretch;
+    background: var(--slide-accent, var(--color-bg-page));
   }
-  .slide__copy { align-self: start; }
 
-  /* square here too, capped so a 600px viewport does not hand back a 480px
-     image. Every slide is now the same box, so the portrait needs no special
-     sizing — it just crops instead of letterboxing. */
+  /* the markup is copy-then-media, but this layout puts the image first */
+  .slide__media { grid-row: 1; }
+  .slide__copy  { grid-row: 2; }
+
+  /* the artwork floats inset on the field; a photo fills it instead */
   .slide__media,
   .slide--portrait .slide__media {
-    width: 100%;
-    max-width: var(--layout-slide-media-max);
-    aspect-ratio: 1;
+    width: 90.4%;                       /* 300 of 332 */
+    max-width: none;
+    height: auto;
+    aspect-ratio: auto;
+    object-fit: contain;
+    align-self: center;
     margin-inline: auto;
+    border-radius: var(--radius-slide-art);
+    background: none;
   }
-  /* the grid gap is the gap between copy and image once stacked, and the
-     mobile gutter is too tight for it on the slide with the longest copy */
-  .slide,
-  .slide--portrait { row-gap: var(--space-xl); }
+  .slide--portrait .slide__media {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    border-radius: 0;
+    align-self: stretch;
+  }
 
-  /* back to the media midpoint: the card is tall here, so its centre would
-     land in the gap between copy and image. Every slide's media is now the
-     same height — 100cqw / 1.2068 — and 100cqw is the card's content box. */
-  .carousel__arrow {
-    top: auto;
-    bottom: calc(var(--space-lg)
-                 - var(--size-carousel-arrow-mobile) / 2
-                 + min(100cqw, var(--layout-slide-media-max)) / 2);
+  /* the copy is its own panel; align-content:stretch makes row 2 absorb the
+     slack, so every slide's panel is the same height without measuring */
+  .slide__copy {
+    align-self: stretch;
+    margin: 0 1px 1px;
+    padding: 28px 32px;
+    border-radius: var(--radius-card);
+    background: var(--color-slide-panel);
+    font-size: 18px;
+    line-height: 1.5;
   }
+
+  /* arrows centre on the card, as drawn */
+  .carousel__arrow {
+    top: 50%;
+    bottom: auto;
+    transform: translateY(-50%);
+  }
+
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,3 +1,21 @@
+/* Three slides use a simplified graphic on mobile — larger labels, fewer
+   elements. <picture> would be the obvious tool, but with display:contents it
+   still made the <img> wrap to a second grid row at desktop, and without it the
+   wrapper becomes the grid item and every .slide__media rule misses. Swapping
+   the src keeps the grid exactly as it was. */
+(function () {
+  const imgs = [...document.querySelectorAll('.slide__media[data-mobile-src]')];
+  if (!imgs.length) return;
+  const mq = matchMedia('(max-width: 700px)');
+  const sync = () => imgs.forEach(img => {
+    if (!img.dataset.desktopSrc) img.dataset.desktopSrc = img.getAttribute('src');
+    const want = mq.matches ? img.dataset.mobileSrc : img.dataset.desktopSrc;
+    if (!img.getAttribute('src').endsWith(want)) img.setAttribute('src', want);
+  });
+  sync();
+  mq.addEventListener('change', sync);
+})();
+
 /* About carousel — no dependencies. */
 (function () {
   const root = document.querySelector('[data-carousel]');
