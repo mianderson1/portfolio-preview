@@ -140,6 +140,9 @@
   --space-stack-grid-item: 48px;
   --space-skill-gap: 10.4px;
   --space-section-pad: 100px;
+  /* the breathing room above and below every section below the hero. 150 is
+     what the original site used; the sections had been cut to 48 to absorb
+     the old 55px overlap, which no longer exists */
   --space-surface-pad: 150px;
   --layout-viewport: 1440px;
   --layout-intro-top: 150px;
@@ -154,6 +157,9 @@
   --font-size-hero: 48px;
   --font-size-h1: 33.6px;
   --font-size-h2: 28px;
+  /* the About slide copy. Its own step, so it can sit clearly below the flip
+     card's 33.6 heading without dragging --font-size-h2 around with it */
+  --font-size-slide: 24px;
   --font-size-h4: 24px;
   --font-size-skill: 20.8px;
   --font-size-h6: 38.4px;
@@ -215,6 +221,8 @@
     --layout-col-side: 331.5px;
     --layout-hero-height: 1350px;
     --layout-intro-width: 331.5px;
+    --space-surface-pad: 72px;   /* 150 is desktop breathing room, not phone */
+    --font-size-slide: 18px;
     --space-stack-heading: 15.6px;
     --layout-viewport: 390px;
     --layout-intro-top: 430px;
@@ -260,4 +268,11 @@
    One step down rather than a fluid scale, so the size stays nameable. */
 @media (max-width: 900px) {
   :root { --font-size-h2: 22px; }
+}
+
+/* The compact range only. Bounded on purpose: the <=900 block is declared
+   after the <=750 one, so an open-ended value here would override the phone
+   step as well. */
+@media (min-width: 751px) and (max-width: 900px) {
+  :root { --font-size-slide: 21px; }
 }
