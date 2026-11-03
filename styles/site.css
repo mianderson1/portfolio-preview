@@ -663,9 +663,11 @@ a { color: inherit; }
   .slide--portrait {
     border-radius: var(--radius-card);
     overflow: hidden;
-    /* the carousel no longer paints the card, so each slide carries its own
-       field — white where a slide has no accent */
-    background: var(--slide-accent, var(--color-bg-page));
+    /* The carousel no longer paints the card, so each slide carries its own
+       field. The fallback has to be a fixed white, not --color-bg-page: that
+       token flips to black inside the dark .about sheet, which turned slide 1
+       into a black card — visible the moment the panel animates down. */
+    background: var(--slide-accent, var(--primitive-white));
     grid-template-columns: minmax(0, 1fr);
     /* the image region is square: the card's inner width, less its 1px border */
     /* 1fr, not auto: row 2 then absorbs the slack so every slide's panel is the
