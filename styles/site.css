@@ -183,7 +183,15 @@ a { color: inherit; }
   background: rgb(255 255 255 / .55);
   backdrop-filter: blur(12px);
   color: var(--color-text-on-light);
+  transition: background-color .2s ease, color .2s ease;
 }
+@media (hover: hover) {
+  .scroll-cue:hover {
+    background: var(--color-card-surface-ink);
+    color: var(--color-text-on-dark);
+  }
+}
+.scroll-cue:active { scale: .96; }
 .scroll-cue svg { width: 13px; height: 26px; }
 
 /* ───────── site nav — pill on desktop, bottom bar on mobile ───────── */
@@ -320,7 +328,6 @@ a { color: inherit; }
    underline it has in Figma; the Skills one has neither */
 .eyebrow-chip--bare {
   color: var(--sheet-ink, var(--color-text-on-dark));
-  text-decoration: underline; text-underline-offset: 4px;
 }
 .section-heading {
   max-width: var(--layout-col-main);
@@ -839,7 +846,8 @@ a { color: inherit; }
   }
 
   .slide.is-entering .slide__copy {
-    animation: slide-panel-in .42s cubic-bezier(.22, .61, .24, 1) both;
+    animation: slide-panel-in var(--motion-slide-panel)
+               cubic-bezier(.22, .61, .24, 1) both;
   }
 
   /* Soften the peek, two ways. The scroller is masked so a neighbour fades out
@@ -986,8 +994,8 @@ a { color: inherit; }
 .line > span { display: block; }
 
 .is-revealing .line > span {
-  animation: line-in .62s cubic-bezier(.22,.61,.24,1) both;
-  animation-delay: calc(var(--n, 0) * 85ms);
+  animation: line-in var(--motion-line-duration) cubic-bezier(.22,.61,.24,1) both;
+  animation-delay: calc(var(--n, 0) * var(--motion-line-stagger));
   will-change: opacity, transform;
 }
 @keyframes line-in {

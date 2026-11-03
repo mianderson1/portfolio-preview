@@ -71,7 +71,11 @@
     slide.classList.remove('is-entering');
     void slide.offsetWidth;                       // restart the animation
     slide.classList.add('is-entering');
-    typeT = setTimeout(play, 170);                // after the panel has travelled
+    // the panel's travel is a token, so read the matching delay from the same
+    // place rather than keeping a second copy of the timing here
+    const d = parseFloat(getComputedStyle(document.documentElement)
+                .getPropertyValue('--motion-type-delay')) || 170;
+    typeT = setTimeout(play, d);
   }
 
   /* Split in two. The classes drive the de-emphasis of the off-centre cards,

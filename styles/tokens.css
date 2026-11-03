@@ -10,7 +10,7 @@
   --primitive-grey-600: #555555;
   --primitive-grey-500: #7F8C8D;
   --primitive-grey-300: #A1A1A1;
-  --primitive-grey-200: #D8D8D8;
+  --primitive-grey-200: #E2E2E2;
   --primitive-grey-100: #ECECEC;
   --primitive-blue-050: #EDF2FA;
   --primitive-blue-700: #4E74AE;
@@ -160,6 +160,12 @@
   /* the About slide copy. Its own step, so it can sit clearly below the flip
      card's 33.6 heading without dragging --font-size-h2 around with it */
   --font-size-slide: 24px;
+  /* slide motion, in one place. The phone gets slower values: the card is
+     small and close, so the same timings read as a flick there. */
+  --motion-slide-panel: .42s;
+  --motion-line-duration: .62s;
+  --motion-line-stagger: 85ms;
+  --motion-type-delay: 170ms;
   --font-size-h4: 24px;
   --font-size-skill: 20.8px;
   --font-size-h6: 38.4px;
@@ -221,6 +227,10 @@
     --layout-col-side: 331.5px;
     --layout-hero-height: 1350px;
     --layout-intro-width: 331.5px;
+    --motion-slide-panel: .62s;
+    --motion-line-duration: .78s;
+    --motion-line-stagger: 125ms;
+    --motion-type-delay: 280ms;
     --space-surface-pad: 72px;   /* 150 is desktop breathing room, not phone */
     --font-size-slide: 18px;
     --space-stack-heading: 15.6px;
