@@ -58,12 +58,31 @@
     viewport.scrollBy({ left: delta, behavior });
   }
 
-  function mark(n) {
+  let typeT;
+  /* The panel moves in, then the type follows it. Only when a control was
+     used: after a free swipe the incoming card has been on screen the whole
+     time, and re-animating its panel there reads as a glitch rather than as
+     an entrance. */
+  function enter(slide, animate) {
+    const lines = slide.querySelector('[data-lines]');
+    const play = () => { if (window.__playLines) window.__playLines(lines); };
+    clearTimeout(typeT);
+    if (!animate || reduce.matches) { play(); return; }
+    slide.classList.remove('is-entering');
+    void slide.offsetWidth;                       // restart the animation
+    slide.classList.add('is-entering');
+    typeT = setTimeout(play, 170);                // after the panel has travelled
+  }
+
+  function mark(n, animate) {
     if (n === i) return;
     i = n;
-    slides.forEach((s, k) => s.classList.toggle('is-current', k === i));
+    slides.forEach((s, k) => {
+      s.classList.toggle('is-current', k === i);
+      if (k !== i) s.classList.remove('is-entering');
+    });
     dots.forEach((d, k) => d.setAttribute('aria-selected', String(k === i)));
-    if (window.__playLines) window.__playLines(slides[i].querySelector('[data-lines]'));
+    enter(slides[i], animate);
   }
 
   // which slide is nearest the middle right now
@@ -85,17 +104,24 @@
   let locked = false, settle;
   function go(n) {
     const target = (n + slides.length) % slides.length;
+    /* Wrapping runs the length of the track. Smooth-scrolling across three
+       snap points lets the snap engine catch the scroll part-way and settle
+       somewhere in between — which is how the last slide stopped being able to
+       reach the first. A wrap jumps instead. */
+    const wrapped = Math.abs(target - i) > 1;
     locked = true;
-    centre(target, reduce.matches ? 'auto' : 'smooth');
-    mark(target);
+    centre(target, (reduce.matches || wrapped) ? 'auto' : 'smooth');
+    mark(target, true);
     clearTimeout(settle);
-    settle = setTimeout(() => { locked = false; }, 600);
+    // re-read at the end: if the scroll did not land where it was told, the
+    // dots and the index correct themselves rather than drifting out of sync
+    settle = setTimeout(() => { locked = false; mark(nearest(), false); }, 700);
   }
 
   let idle;
   viewport.addEventListener('scroll', () => {
     clearTimeout(idle);
-    idle = setTimeout(() => { if (!locked) mark(nearest()); }, 120);
+    idle = setTimeout(() => { if (!locked) mark(nearest(), false); }, 120);
   }, { passive: true });
 
   prev.addEventListener('click', () => go(i - 1));

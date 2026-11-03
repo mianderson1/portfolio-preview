@@ -477,6 +477,11 @@ a { color: inherit; }
   width: 100%;
   aspect-ratio: 288 / 474;
 }
+@keyframes slide-panel-in {
+  from { transform: translateY(18px); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+
 .carousel__controls {
   position: absolute;
   left: var(--space-card-pad-large);
@@ -728,8 +733,12 @@ a { color: inherit; }
      is full-bleed now, so they can no longer be offset from its own edge —
      they hang off the card, which is centred inside it. z-index keeps them
      over the edge treatment below, so they never pick up its blur. */
+  /* Centred on the artwork square, not on the card. 50% of the card depended
+     on the copy panel's height, which depends on where the text wraps, which
+     depends on when the webfont lands — so the arrows moved after load. The
+     square is a pure function of the viewport width and cannot shift. */
   .carousel__arrow {
-    top: 50%;
+    top: calc(var(--slide-card-w) / 2);
     bottom: auto;
     transform: translateY(-50%);
     z-index: 2;
@@ -741,6 +750,15 @@ a { color: inherit; }
   .carousel__arrow--next {
     right: calc((100% - var(--slide-card-w)) / 2
                 - var(--size-carousel-arrow-mobile) / 2);
+  }
+
+  /* The panel moves in from below the card, and the type follows it — the
+     slide's own 18px of field shows underneath for the length of the travel.
+     Driven by a class rather than :is-current so it can be replayed, and only
+     applied when a control was used: after a free swipe the panel is already
+     on screen, and re-animating it there reads as a glitch. */
+  .slide.is-entering .slide__copy {
+    animation: slide-panel-in .42s cubic-bezier(.22, .61, .24, 1) both;
   }
 
   /* Soften the peek. The scroller is masked so a neighbour fades out instead
