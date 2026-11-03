@@ -773,14 +773,26 @@ a { color: inherit; }
      Driven by a class rather than :is-current so it can be replayed, and only
      applied when a control was used: after a free swipe the panel is already
      on screen, and re-animating it there reads as a glitch. */
+  .slide:not(.is-current) {
+    filter: blur(3px);
+    transform: scale(.94);
+    opacity: .85;
+  }
+  .slide {
+    transition: filter .3s ease,
+                transform .3s cubic-bezier(.22, .61, .24, 1),
+                opacity .3s ease;
+  }
+
   .slide.is-entering .slide__copy {
     animation: slide-panel-in .42s cubic-bezier(.22, .61, .24, 1) both;
   }
 
-  /* Soften the peek. The scroller is masked so a neighbour fades out instead
-     of ending on a cut, and a blurred strip sits over the same band so the
-     sliver reads as out of focus rather than sliced. The two edges share one
-     pseudo-element each; the right is the left, mirrored. */
+  /* Soften the peek, two ways. The scroller is masked so a neighbour fades out
+     at the edge instead of ending on a cut, and the slides that are not
+     centred are blurred and held back a little, so they read as waiting rather
+     than as cropped. The class tracks the scroll live rather than waiting for
+     it to settle, or a card would stay blurred under your finger. */
   .carousel__viewport {
     --edge: calc(var(--layout-slide-peek) + var(--layout-slide-peek-gap));
     -webkit-mask-image: linear-gradient(to right,
@@ -790,22 +802,6 @@ a { color: inherit; }
         transparent 0, #000 var(--edge),
         #000 calc(100% - var(--edge)), transparent 100%);
   }
-  .carousel::before,
-  .carousel::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: calc(var(--layout-slide-peek) + var(--layout-slide-peek-gap));
-    pointer-events: none;
-    z-index: 1;
-    backdrop-filter: blur(5px);
-    /* ramp the blur out, or it just trades one hard edge for another */
-    -webkit-mask-image: linear-gradient(to right, #000 35%, transparent 100%);
-    mask-image: linear-gradient(to right, #000 35%, transparent 100%);
-  }
-  .carousel::before { left: 0; }
-  .carousel::after { right: 0; transform: scaleX(-1); }
 
 }
 

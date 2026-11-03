@@ -74,14 +74,25 @@
     typeT = setTimeout(play, 170);                // after the panel has travelled
   }
 
-  function mark(n, animate) {
-    if (n === i) return;
+  /* Split in two. The classes drive the de-emphasis of the off-centre cards,
+     so they have to track the scroll live — waiting for it to settle would
+     leave the card you are dragging towards blurred under your finger. The
+     copy reveal is the expensive half and still waits for the scroll to stop. */
+  function applyActive(n) {
+    if (n === i) return false;
     i = n;
     slides.forEach((s, k) => {
       s.classList.toggle('is-current', k === i);
       if (k !== i) s.classList.remove('is-entering');
     });
     dots.forEach((d, k) => d.setAttribute('aria-selected', String(k === i)));
+    return true;
+  }
+
+  let revealed = i;
+  function mark(n, animate) {
+    if (!applyActive(n)) return;
+    revealed = i;
     enter(slides[i], animate);
   }
 
@@ -118,14 +129,30 @@
     settle = setTimeout(() => { locked = false; mark(nearest(), false); }, 700);
   }
 
-  let idle;
+  let raf = 0, idle;
   viewport.addEventListener('scroll', () => {
+    if (!raf) raf = requestAnimationFrame(() => {
+      raf = 0;
+      if (!locked) applyActive(nearest());
+    });
     clearTimeout(idle);
-    idle = setTimeout(() => { if (!locked) mark(nearest(), false); }, 120);
+    idle = setTimeout(() => {
+      if (locked) return;
+      const n = nearest();
+      applyActive(n);
+      if (n !== revealed) { revealed = n; enter(slides[n], false); }
+    }, 120);
   }, { passive: true });
 
-  prev.addEventListener('click', () => go(i - 1));
-  next.addEventListener('click', () => go(i + 1));
+  /* iOS scrolls a newly focused control into view, which shifts the page under
+     the tap. detail > 0 means the click came from a pointer rather than from
+     the keyboard, so the focus is dropped there and kept everywhere else. */
+  const tap = (btn, step) => btn.addEventListener('click', e => {
+    if (e.detail > 0) btn.blur();
+    go(i + step);
+  });
+  tap(prev, -1);
+  tap(next, 1);
 
   root.addEventListener('keydown', e => {
     if (e.key === 'ArrowLeft') { go(i - 1); prev.focus(); }
