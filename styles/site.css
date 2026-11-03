@@ -145,7 +145,11 @@ a { color: inherit; }
   margin: 0; padding: var(--space-sm); border: 0;
   border-radius: var(--radius-card);
   background: var(--color-bg-page);
-  box-shadow: 0 12px 40px rgb(0 0 0 / .18);
+  /* no scrim: this is a menu anchored to its button, not a modal sheet, so
+     the shadow alone lifts it. A tight contact layer under a soft ambient one
+     keeps the edge legible against whatever it happens to sit over. */
+  box-shadow: 0 1px 2px rgb(0 0 0 / .10),
+              0 12px 40px rgb(0 0 0 / .22);
   font-family: var(--font-family-sans);
   font-size: var(--font-size-label);
   /* a popover toggles `display`, so the discrete properties have to be allowed
@@ -162,12 +166,6 @@ a { color: inherit; }
 .nav-popover:popover-open { opacity: 1; transform: none; }
 @starting-style {
   .nav-popover:popover-open { opacity: 0; transform: translateY(6px) scale(.98); }
-}
-.nav-popover::backdrop {
-  background: rgb(0 0 0 / 0);
-  transition: background-color .18s ease,
-              display .18s allow-discrete,
-              overlay .18s allow-discrete;
 }
 .nav-popover a {
   display: block; padding: var(--space-md) var(--space-lg);
@@ -768,7 +766,6 @@ a { color: inherit; }
     border-radius: var(--radius-card);
     padding: var(--space-sm);
   }
-  .nav-popover:popover-open::backdrop { background: rgb(0 0 0 / .35); }
 
   .card-grid { grid-template-columns: minmax(0, 1fr); }
   .card--wide { width: 100%; }
