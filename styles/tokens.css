@@ -187,7 +187,13 @@
 
   /* glass sheets — measured off Home — Desktop 1444 */
   --sheet-radius: 0px;   /* square slices — trying it without the rounded top */
-  --sheet-overlap: 55px;
+  /* the sections sat on top of each other by this much, which is what made
+     them read as a stack of cards. They butt now, so it is zero. */
+  --sheet-overlap: 0px;
+  /* the one surface every section below the hero sits on, and the colour the
+     hero fades into so the seam disappears (Figma 377:24925) */
+  --color-surface-section: #F5F5F5;
+  --layout-hero-fade: 176px;
   --sheet-light: rgb(245 245 245 / 0.90);
   --sheet-light-blur: 32px;
   --sheet-dark: rgb(0 0 0 / 0.80);
@@ -226,7 +232,7 @@
     --layout-card-media-bleed-h: 290px;
     --layout-scroll-rule-h: 56px;
     /* the 298px overlap is a desktop measurement; it swallows the hero copy at 390 */
-    --sheet-overlap: 24px;
+    --sheet-overlap: 0px;
     --sheet-radius: 0px;
   }
 }
