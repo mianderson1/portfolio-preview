@@ -397,7 +397,13 @@ a { color: inherit; }
   background: var(--color-bg-page);          /* white, same as the flip cards */
 }
 
-.carousel__viewport { display: grid; }
+.carousel__viewport {
+  display: grid;
+  /* hand the horizontal axis to the swipe handler and keep vertical scrolling
+     (and pinch-zoom) native, so no preventDefault is needed in the listener */
+  touch-action: pan-y pinch-zoom;
+}
+.carousel__viewport.is-dragging { user-select: none; }
 .slide {
   grid-area: 1 / 1;
   display: grid;
@@ -409,8 +415,11 @@ a { color: inherit; }
   align-items: center;
   opacity: 0;
   visibility: hidden;
-  transition: opacity .3s ease, visibility .3s;
+  transition: opacity .3s ease, visibility .3s,
+              transform .35s cubic-bezier(.22,.61,.24,1);
 }
+/* the drag follows the finger, so it must not lag behind it */
+.is-dragging .slide { transition: opacity .3s ease, visibility .3s; }
 .slide.is-current { opacity: 1; visibility: visible; }
 
 /* each slide carries its own field colour; only the mobile layout paints it */

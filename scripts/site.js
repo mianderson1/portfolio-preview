@@ -56,6 +56,64 @@
     if (e.key === 'ArrowRight') { go(i + 1); next.focus(); }
   });
 
+  /* Swipe. The slides are stacked in one grid cell and cross-faded, so there is
+     no native scroller to inherit a gesture from — the pointer is tracked by
+     hand. touch-action: pan-y on the viewport hands us the horizontal axis and
+     keeps vertical scrolling native, so nothing here calls preventDefault and
+     the page never feels stuck. The mouse is left alone: dragging across the
+     copy has to keep selecting text. */
+  const viewport = root.querySelector('.carousel__viewport');
+  if (viewport && window.PointerEvent) {
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+    let id = null, x0 = 0, y0 = 0, dx = 0, axis = null;
+
+    function reset() {
+      viewport.classList.remove('is-dragging');
+      if (slides[i]) slides[i].style.transform = '';
+      id = null; axis = null; dx = 0;
+    }
+
+    viewport.addEventListener('pointerdown', e => {
+      if (e.pointerType === 'mouse' || id !== null) return;
+      id = e.pointerId; x0 = e.clientX; y0 = e.clientY; dx = 0; axis = null;
+    });
+
+    viewport.addEventListener('pointermove', e => {
+      if (e.pointerId !== id) return;
+      dx = e.clientX - x0;
+      const dy = e.clientY - y0;
+      if (!axis) {
+        if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;   // too small to call
+        axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+        if (axis !== 'x') return;
+        viewport.classList.add('is-dragging');
+        // keep receiving moves even if the finger leaves the card
+        try { viewport.setPointerCapture(id); } catch (err) { /* not fatal */ }
+      }
+      if (axis !== 'x' || reduce.matches) return;
+      // Damped and capped. The slide carries the card's colour field, so
+      // travelling any further would open a white gap at the rounded edge —
+      // 28px reads as the card resisting rather than as a broken layout.
+      const shift = Math.max(-28, Math.min(28, dx * 0.3));
+      if (slides[i]) slides[i].style.transform = 'translateX(' + shift + 'px)';
+    });
+
+    viewport.addEventListener('pointerup', e => {
+      if (e.pointerId !== id) return;
+      const travelled = dx, swiped = axis === 'x';
+      reset();
+      if (!swiped) return;
+      // 45px, or a tenth of the card where that is shorter
+      const threshold = Math.min(45, viewport.offsetWidth * 0.1);
+      if (travelled <= -threshold) go(i + 1);
+      else if (travelled >= threshold) go(i - 1);
+    });
+
+    viewport.addEventListener('pointercancel', e => {
+      if (e.pointerId === id) reset();
+    });
+  }
+
   go(i);
 })();
 
@@ -219,14 +277,20 @@
     window.__playLines = play;
   });
 
-  let t;
+  /* Only the width can change where the lines break, and watching it is what
+     keeps the copy still on iOS: showing or hiding the URL bar fires resize
+     with the width untouched, which used to re-split and replay the reveal
+     every time you stopped scrolling. After a real width change the lines are
+     re-measured but left in their resting state — the copy is visible by
+     default, so dropping is-revealing simply means it does not animate again. */
+  let t, lastWidth = innerWidth;
   addEventListener('resize', () => {
+    if (innerWidth === lastWidth) return;
+    lastWidth = innerWidth;
     clearTimeout(t);
     t = setTimeout(() => {
-      splitAll();
       targets().forEach(el => el.classList.remove('is-revealing'));
-      const vis = document.querySelector('.slide.is-current [data-lines]');
-      if (vis) vis.classList.add('is-revealing');
+      splitAll();
     }, 180);
   });
 })();
