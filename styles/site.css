@@ -173,6 +173,10 @@ a { color: inherit; }
   margin-top: calc(var(--sheet-overlap) * -1);
 }
 .about .carousel {
+  /* the section carries data-theme="dark", which flips --color-bg-page to
+     black — but every other rule here (on-light ink, ink-filled next arrow)
+     assumes a light card, so pin the surface rather than inherit it */
+  background: var(--primitive-white);
   --sheet-ink: var(--color-text-on-light);
   --sheet-rule: rgb(0 0 0 / .16);
   --sheet-dot: rgb(0 0 0 / .22);
