@@ -16,15 +16,23 @@
   mq.addEventListener('change', sync);
 })();
 
-/* About carousel — no dependencies. */
+/* About carousel — a native scroll-snap track.
+   The slides used to share one grid cell and cross-fade, so a swipe had
+   nothing to move. They now sit in a row inside a scroller: the gesture, the
+   momentum and the snap belong to the browser, and all this does is drive it
+   from the arrows and dots, and read back which slide it settled on. */
 (function () {
   const root = document.querySelector('[data-carousel]');
   if (!root) return;
 
+  const viewport = root.querySelector('.carousel__viewport');
   const slides = [...root.querySelectorAll('.slide')];
   const dotsBox = root.querySelector('.carousel__dots');
   const prev = root.querySelector('[data-prev]');
   const next = root.querySelector('[data-next]');
+  if (!viewport || !slides.length) return;
+
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
   let i = slides.findIndex(s => s.classList.contains('is-current'));
   if (i < 0) i = 0;
 
@@ -39,14 +47,56 @@
     return b;
   });
 
-  function go(n) {
-    const next = (n + slides.length) % slides.length;
-    if (next === i) return;
-    i = next;
+  /* Centre a slide by the difference between its midpoint and the
+     scrollport's. Measuring beats arithmetic here: below 700 the scroller
+     carries inline padding and a gap, and this never has to know. */
+  function centre(n, behavior) {
+    const v = viewport.getBoundingClientRect();
+    const s = slides[n].getBoundingClientRect();
+    const delta = (s.left + s.width / 2) - (v.left + v.width / 2);
+    if (!delta) return;
+    viewport.scrollBy({ left: delta, behavior });
+  }
+
+  function mark(n) {
+    if (n === i) return;
+    i = n;
     slides.forEach((s, k) => s.classList.toggle('is-current', k === i));
     dots.forEach((d, k) => d.setAttribute('aria-selected', String(k === i)));
     if (window.__playLines) window.__playLines(slides[i].querySelector('[data-lines]'));
   }
+
+  // which slide is nearest the middle right now
+  function nearest() {
+    const v = viewport.getBoundingClientRect();
+    const mid = v.left + v.width / 2;
+    let best = 0, bestD = Infinity;
+    slides.forEach((s, n) => {
+      const r = s.getBoundingClientRect();
+      const d = Math.abs((r.left + r.width / 2) - mid);
+      if (d < bestD) { bestD = d; best = n; }
+    });
+    return best;
+  }
+
+  /* A programmatic scroll passes over the slides in between, and reading those
+     would replay their copy reveal on the way past. Hold the readback until
+     the scroll has settled. */
+  let locked = false, settle;
+  function go(n) {
+    const target = (n + slides.length) % slides.length;
+    locked = true;
+    centre(target, reduce.matches ? 'auto' : 'smooth');
+    mark(target);
+    clearTimeout(settle);
+    settle = setTimeout(() => { locked = false; }, 600);
+  }
+
+  let idle;
+  viewport.addEventListener('scroll', () => {
+    clearTimeout(idle);
+    idle = setTimeout(() => { if (!locked) mark(nearest()); }, 120);
+  }, { passive: true });
 
   prev.addEventListener('click', () => go(i - 1));
   next.addEventListener('click', () => go(i + 1));
@@ -56,64 +106,23 @@
     if (e.key === 'ArrowRight') { go(i + 1); next.focus(); }
   });
 
-  /* Swipe. The slides are stacked in one grid cell and cross-faded, so there is
-     no native scroller to inherit a gesture from — the touch is tracked by
-     hand. Touch events rather than pointer events: iOS takes a pointer gesture
-     back with pointercancel the moment it suspects a scroll, while touchmove
-     keeps firing, and touch events never fire for the mouse, so dragging across
-     the copy still selects text. touch-action: pan-y on the viewport leaves
-     vertical scrolling native, so every listener here can stay passive. */
-  const viewport = root.querySelector('.carousel__viewport');
-  if (viewport) {
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)');
-    let x0 = 0, y0 = 0, dx = 0, axis = null, tracking = false;
+  // the card width changes with the breakpoint, so re-centre what was showing
+  let lastW = innerWidth, resizeT;
+  addEventListener('resize', () => {
+    if (innerWidth === lastW) return;
+    lastW = innerWidth;
+    clearTimeout(resizeT);
+    resizeT = setTimeout(() => {
+      locked = true;
+      centre(i, 'auto');
+      clearTimeout(settle);
+      settle = setTimeout(() => { locked = false; }, 200);
+    }, 180);
+  });
 
-    function reset() {
-      viewport.classList.remove('is-dragging');
-      if (slides[i]) slides[i].style.transform = '';
-      tracking = false; axis = null; dx = 0;
-    }
-
-    function commit() {
-      const travelled = dx, swiped = axis === 'x';
-      reset();
-      if (!swiped) return;
-      // 45px, or a tenth of the card where that is shorter
-      const threshold = Math.min(45, viewport.offsetWidth * 0.1);
-      if (travelled <= -threshold) go(i + 1);
-      else if (travelled >= threshold) go(i - 1);
-    }
-
-    viewport.addEventListener('touchstart', e => {
-      if (e.touches.length > 1) { reset(); return; }      // leave pinch-zoom alone
-      x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
-      dx = 0; axis = null; tracking = true;
-    }, { passive: true });
-
-    viewport.addEventListener('touchmove', e => {
-      if (!tracking) return;
-      if (e.touches.length > 1) { reset(); return; }
-      dx = e.touches[0].clientX - x0;
-      const dy = e.touches[0].clientY - y0;
-      if (!axis) {
-        if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;  // too small to call
-        axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
-        if (axis === 'x') viewport.classList.add('is-dragging');
-      }
-      if (axis !== 'x' || reduce.matches) return;
-      // Damped and capped. The slide carries the card's colour field, so
-      // travelling any further would open a gap at the rounded edge — 28px
-      // reads as the card resisting rather than as a broken layout.
-      const shift = Math.max(-28, Math.min(28, dx * 0.3));
-      if (slides[i]) slides[i].style.transform = 'translateX(' + shift + 'px)';
-    }, { passive: true });
-
-    viewport.addEventListener('touchend', () => { if (tracking) commit(); }, { passive: true });
-    // iOS cancels if it takes the gesture over; honour a swipe already made
-    viewport.addEventListener('touchcancel', () => { if (tracking) commit(); }, { passive: true });
-  }
-
-  go(i);
+  slides.forEach((s, k) => s.classList.toggle('is-current', k === i));
+  dots.forEach((d, k) => d.setAttribute('aria-selected', String(k === i)));
+  centre(i, 'auto');
 })();
 
 /* Reveal the nav once the hero has scrolled past.

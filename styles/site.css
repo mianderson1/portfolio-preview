@@ -414,20 +414,23 @@ a { color: inherit; }
 }
 
 .carousel__viewport {
+  /* A real scroll-snap track. The slides used to share one grid cell and
+     cross-fade, so a swipe had nothing to move — the gesture, the momentum and
+     the snap are now the browser's, which is both better than the hand-rolled
+     pointer tracking it replaces and the only way to show the neighbouring
+     cards at the same time. */
   display: grid;
-  /* Hand the horizontal axis to the swipe handler and keep vertical scrolling
-     native, so no preventDefault is needed in the listener. Declared twice on
-     purpose: Safari does not appear to parse the pinch-zoom keyword, and a
-     single unknown token invalidates the whole declaration — which would leave
-     iOS on `auto`, where the browser claims every horizontal gesture and the
-     swipe never fires. The plain value lands first so Safari keeps pan-y;
-     anything that does parse the second keeps pinch-zoom as well. */
-  touch-action: pan-y;
-  touch-action: pan-y pinch-zoom;
+  grid-auto-flow: column;
+  grid-auto-columns: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
 }
-.carousel__viewport.is-dragging { user-select: none; }
+.carousel__viewport::-webkit-scrollbar { display: none; }
 .slide {
-  grid-area: 1 / 1;
+  scroll-snap-align: center;
   display: grid;
   /* Equal columns. A fixed 572px media starved the copy as the window narrowed
      — at a 900px viewport the text column computed to -4px. Both sides now
@@ -435,14 +438,7 @@ a { color: inherit; }
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: var(--layout-gutter);
   align-items: center;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity .3s ease, visibility .3s,
-              transform .35s cubic-bezier(.22,.61,.24,1);
 }
-/* the drag follows the finger, so it must not lag behind it */
-.is-dragging .slide { transition: opacity .3s ease, visibility .3s; }
-.slide.is-current { opacity: 1; visibility: visible; }
 
 /* each slide carries its own field colour; only the mobile layout paints it */
 .slide--pink { --slide-accent: var(--primitive-pink-300); }
@@ -481,15 +477,6 @@ a { color: inherit; }
   width: 100%;
   aspect-ratio: 288 / 474;
 }
-.slide.is-current .slide__media {
-  animation: media-in .7s cubic-bezier(.22,.61,.24,1) both;
-  animation-delay: 140ms;
-}
-@keyframes media-in {
-  from { opacity: 0; transform: scale(.988); }
-  to   { opacity: 1; transform: none; }
-}
-
 .carousel__controls {
   position: absolute;
   left: var(--space-card-pad-large);
@@ -527,6 +514,38 @@ a { color: inherit; }
 .carousel__dot[aria-selected="true"] {
   background: var(--color-text-on-dark);
   transform: scale(1.25);
+}
+
+/* Glass pill around the controls, from 485:30070. Only above the compact
+   breakpoint — below it the controls are display:contents and the arrows
+   straddle the card edge, so there is no pill to fill. The negative offsets
+   keep the arrows where they already sat; the pill grows around them. Figma's
+   blur there is progressive, which CSS has no equivalent for, so this takes
+   the 12px start radius and applies it evenly. */
+@media (min-width: 901px) {
+  .carousel__controls {
+    left: calc(var(--space-card-pad-large) - var(--space-md));
+    bottom: calc(var(--space-card-pad-large) - var(--space-md));
+    padding: var(--space-md);
+    border-radius: var(--radius-infinite);
+    background: linear-gradient(to bottom,
+                rgb(255 255 255 / 0) 0%, rgb(255 255 255 / .8) 50%);
+    backdrop-filter: blur(12px);
+  }
+  .carousel__controls .carousel__arrow {
+    background: var(--color-bg-page);
+    border-color: var(--color-card-border);
+    color: var(--color-text-on-light);
+  }
+  .carousel__controls .carousel__arrow--next {
+    background: var(--color-card-surface-ink);
+    color: var(--color-text-on-dark);
+    border-color: transparent;
+  }
+  .carousel__controls .carousel__dot { background: rgb(46 46 46 / .25); }
+  .carousel__controls .carousel__dot[aria-selected="true"] {
+    background: var(--color-card-surface-ink);
+  }
 }
 
 /* 900-700: hold two columns and shrink instead of stacking. Columns land at
@@ -600,29 +619,55 @@ a { color: inherit; }
      full height, with the artwork floating in the upper square and the copy in
      a rounded panel at the bottom. The field is square-cornered; something
      above it has to do the rounding. */
+  /* The track runs full-bleed so the neighbouring cards can sit in the page
+     margin and peek. The carousel is no longer the card — each slide is — so
+     its border, fill and radius come off here. */
   .carousel {
+    /* One source of truth for the card width. An element cannot query itself,
+       so every cqw below resolves against this full-bleed carousel — which is
+       exactly why the width has to be named once and reused, rather than each
+       rule deriving it again. */
+    --slide-card-w: min(var(--layout-slide-card-max),
+                        calc(100cqw - 2 * (var(--layout-slide-peek)
+                                           + var(--layout-slide-peek-gap))));
     padding: 0;
-    /* capped: the image region is as tall as the card is wide, so at 699px an
-       uncapped card gives a 613px square */
-    max-width: var(--layout-slide-card-max);
-    margin-inline: auto;
+    max-width: none;
+    margin-inline: calc(var(--layout-page-margin) * -1);
+    border: 0;
+    border-radius: 0;
+    background: none;
   }
-  /* the clip goes here, not on .carousel — the arrows hang outside the card by
-     half their width and were being cut off by it */
+  .about .carousel,
+  .about--light .carousel { background: none; }
+
+  /* The scroller's inline padding is peek + gap, and the card is simply 100%
+     of what is left. That is what pins the peek at exactly 16px: when the card
+     reaches its 420 cap the scroller caps at the same width plus the two
+     paddings, so the sum never drifts. */
   .carousel__viewport {
-    overflow: hidden;
-    border-radius: calc(var(--radius-card) - var(--size-border-width));
+    max-width: calc(var(--layout-slide-card-max)
+                    + 2 * (var(--layout-slide-peek) + var(--layout-slide-peek-gap)));
+    margin-inline: auto;
+    padding-inline: calc(var(--layout-slide-peek) + var(--layout-slide-peek-gap));
+    gap: var(--layout-slide-peek-gap);
+    grid-auto-columns: var(--slide-card-w);
+    border-radius: 0;
   }
+  /* each slide is the card now, so the clip and the radius live here */
   .slide,
   .slide--portrait {
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    /* the carousel no longer paints the card, so each slide carries its own
+       field — white where a slide has no accent */
+    background: var(--slide-accent, var(--color-bg-page));
     grid-template-columns: minmax(0, 1fr);
     /* the image region is square: the card's inner width, less its 1px border */
     /* 1fr, not auto: row 2 then absorbs the slack so every slide's panel is the
        same height as the tallest without measuring any of them */
-    grid-template-rows: 100cqw 1fr;
+    grid-template-rows: var(--slide-card-w) 1fr;
     row-gap: 0;
     align-self: stretch;
-    background: var(--slide-accent, transparent);
   }
 
   /* the markup is copy-then-media, but this layout puts the image first */
@@ -640,7 +685,7 @@ a { color: inherit; }
     /* sits above centre, as drawn: 22 of a 332 field on 438:11100, kept as a
        ratio so it holds when the card grows to its 420 cap */
     align-self: start;
-    margin-top: calc(100cqw * 0.0663);
+    margin-top: calc(var(--slide-card-w) * 0.0663);
     margin-inline: auto;
     border-radius: var(--radius-slide-art);
     background: none;
@@ -656,7 +701,7 @@ a { color: inherit; }
     top: 0; left: 0;
     margin-top: 0;          /* the shared rule's top bias must not apply here */
     width: 100%;
-    height: calc(100cqw + var(--radius-card));
+    height: calc(var(--slide-card-w) + var(--radius-card));
     object-fit: cover;
     border-radius: 0;
   }
@@ -679,23 +724,13 @@ a { color: inherit; }
     line-height: 1.5;
   }
 
-  /* the card cross-fades as one unit here: the media's own delayed fade meant
-     the incoming colour field appeared before its artwork did */
-  .slide.is-current .slide__media { animation: none; }
-
-  /* arrows centre on the card, as drawn */
-  .carousel__arrow {
-    top: 50%;
-    bottom: auto;
-    transform: translateY(-50%);
-  }
+  /* The arrows go. At 48px hanging half outside the card they sat squarely on
+     the peeking neighbour, and with a real track the swipe and the dots carry
+     it. Delete this rule to bring them back. */
+  .carousel__arrow { display: none; }
 
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .slide { transition: opacity .01ms; }
-  .slide.is-current .slide__media { animation: none; }
-}
 
 /* ───────── footer ───────── */
 .site-footer {

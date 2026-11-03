@@ -27,6 +27,11 @@
   --color-media-surface: #F3F4F6;
   --color-slide-panel: #FBFBFB;      /* the copy panel on mobile slides */
   --layout-slide-card-max: 420px;    /* the card stops growing here on mobile */
+  /* the peeking neighbours below 700. The scroller's inline padding is the sum
+     of the two, which is what holds the peek at a constant 16px as the card
+     grows to its cap. */
+  --layout-slide-peek: 16px;
+  --layout-slide-peek-gap: 12px;
   --radius-slide-art: 13px;
   --primitive-blue-400: #6385B8;
   --primitive-dusk-050: #F3F0FB;
