@@ -319,7 +319,17 @@
       range.setEnd(en, eo);
       const r = range.getBoundingClientRect();
       if (r.width === 0 && r.height === 0) continue;      // collapsed whitespace
-      if (prevTop !== null && r.top - prevTop > 1) breaks.push(i - 1);
+      if (prevTop !== null && r.top - prevTop > 1) {
+        /* Snap the break back to a point the text could actually break at.
+           WebKit reports the rect of the first character after a hyphen
+           break on the line above it, which pushed the detected break one
+           character late and split "pixel-perfect" as "pixel-p / erfect".
+           Snapping can only ever shorten a line, never lengthen one, so it
+           cannot push content past the overflow clip. */
+        let b = i - 1;
+        while (b > 0 && !/[\s\u2010-]/.test(full[b - 1])) b--;
+        breaks.push(b);
+      }
       prevTop = r.top;
     }
 

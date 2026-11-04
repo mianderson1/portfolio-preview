@@ -26,7 +26,9 @@
   /* the surface the exported About slide graphics are drawn on, so letterboxing
      them into a square box is invisible */
   --color-media-surface: #F3F4F6;
-  --color-slide-panel: #FBFBFB;      /* the copy panel on mobile slides */
+  /* the same fill the flip cards use. Fixed white rather than
+     --color-bg-page, which flips to black inside a dark section. */
+  --color-slide-panel: var(--primitive-white);
   --layout-slide-card-max: 420px;    /* the card stops growing here on mobile */
   /* the peeking neighbours below 700. The scroller's inline padding is the sum
      of the two, which is what holds the peek at a constant 16px as the card
