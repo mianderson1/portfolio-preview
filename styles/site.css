@@ -178,6 +178,9 @@ a { color: inherit; }
      Substitute mode it renders in, Thin in real Edu Arizona */
   font-weight: var(--font-weight-serif-thin);
   line-height: var(--line-height-heading);
+  /* the rag is orphan-free at the 780 measure, but only by arithmetic — this
+     keeps it that way through a copy change */
+  text-wrap: pretty;
 }
 .hero__currently {
   margin: 0 0 var(--space-2xl);
@@ -212,9 +215,9 @@ a { color: inherit; }
   transition: background-color .2s ease, color .2s ease;
 }
 @media (hover: hover) {
+  /* the same fill the nav's ghost buttons take, rather than its own ink one */
   .scroll-cue:hover {
-    background: var(--color-card-surface-ink);
-    color: var(--color-text-on-dark);
+    background: var(--color-button-ghost-bg-hover-on-light);
   }
 }
 .scroll-cue:active { scale: .96; }
@@ -1124,15 +1127,17 @@ a { color: inherit; }
   position: absolute; inset: 0; margin: auto;
   width: 16px; height: 16px;
   opacity: 0; transition: opacity .25s ease;
-  color: var(--color-text-on-light);
+  color: var(--color-text-on-dark);   /* white glyph over the ink veil */
 }
 @media (hover: hover) {
   .btn--avatar:hover .btn__dec svg { opacity: 1; }
-  .btn--avatar:hover .btn__dec { background-color: #fff; }
 }
+/* The veil used to be white, which lit the avatar up against a black button.
+   Ink reads as the photo receding rather than flashing. */
 .btn--avatar .btn__dec::after {
   content: ""; position: absolute; inset: 0; border-radius: 50%;
-  background: #fff; opacity: 0; transition: opacity .25s ease;
+  background: var(--color-card-surface-ink);
+  opacity: 0; transition: opacity .25s ease;
 }
 @media (hover: hover) {
   .btn--avatar:hover .btn__dec::after { opacity: .88; }
