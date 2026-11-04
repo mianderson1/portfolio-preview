@@ -124,7 +124,11 @@
   --layout-col-spacer: 96px;
   --layout-col-side: 288px;
   --layout-hero-height: 1000px;
-  --layout-intro-width: 685px;
+  /* 685 is the Figma measure, but Figma renders Source Serif 4 under its
+     Substitute mode and the site renders real Edu Arizona, which is wider —
+     the same copy takes 5 lines here against 4 there, orphaning "precision."
+     780 is where Arizona lands on 4 lines with "perfect precision." closing. */
+  --layout-intro-width: 780px;
   --radius-none: 0px;
   --radius-infinite: 9999px;
   --radius-pill: 36px;
