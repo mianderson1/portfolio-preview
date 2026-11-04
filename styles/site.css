@@ -384,6 +384,10 @@ a { color: inherit; }
      side padding with negative margins */
   padding: var(--space-card-pad-large) var(--space-card-pad-x) var(--space-card-media-inset);
   border-radius: var(--radius-card-large);
+  /* the hairline Figma draws on the Skill Card, and the same one the carousel
+     slides carry. Inside the box, so the media stays symmetric: every edge
+     picks up the border's 1px together rather than only the sides. */
+  border: var(--size-border-width) solid var(--color-card-border);
   background: var(--color-bg-page);
 }
 .card:nth-child(2) { background: var(--color-card-surface-paper); }
