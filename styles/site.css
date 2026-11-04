@@ -183,6 +183,10 @@ a { color: inherit; }
   margin: 0 0 var(--space-2xl);
   font-size: var(--font-size-hero-support);
   font-weight: var(--font-weight-serif-thin);
+  /* "Health" was landing alone. The nbsp in the markup keeps the brand whole
+     on its own; this is the belt-and-braces for whatever the copy becomes
+     next, and degrades to a normal wrap where it is not supported. */
+  text-wrap: pretty;
   line-height: var(--line-height-ui);
   color: var(--color-text-muted);
 }
