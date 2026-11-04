@@ -283,37 +283,64 @@
 (function () {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function splitIntoLines(el) {
-    if (!el.dataset.text) el.dataset.text = el.textContent.trim();
-    const text = el.dataset.text;
-    el.textContent = text;
+  /* The original markup, kept so a re-split starts from the source rather
+     than from the spans the last split left behind. */
+  const original = new WeakMap();
 
-    const node = el.firstChild;
-    if (!node || node.nodeType !== 3) return;
+  function splitIntoLines(el) {
+    if (!original.has(el)) original.set(el, el.innerHTML);
+    el.innerHTML = original.get(el);
+
+    /* Walk to the text nodes rather than reading textContent. The hero's
+       subtext wraps "Currently:" in an <em>, and flattening to text would
+       drop it — so offsets are mapped back into the tree and each line is
+       cloned out with its markup intact. */
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    let total = 0, node;
+    while ((node = walker.nextNode())) {
+      nodes.push({ node, start: total, len: node.nodeValue.length });
+      total += node.nodeValue.length;
+    }
+    if (!total) return;
+    const full = nodes.map(n => n.node.nodeValue).join('');
+    const at = off => {
+      for (const n of nodes) if (off <= n.start + n.len) return [n.node, off - n.start];
+      const last = nodes[nodes.length - 1];
+      return [last.node, last.len];
+    };
 
     const range = document.createRange();
     const breaks = [];
     let prevTop = null;
-    for (let i = 1; i <= text.length; i++) {
-      range.setStart(node, i - 1);
-      range.setEnd(node, i);
+    for (let i = 1; i <= total; i++) {
+      const [sn, so] = at(i - 1), [en, eo] = at(i);
+      range.setStart(sn, so);
+      range.setEnd(en, eo);
       const r = range.getBoundingClientRect();
       if (r.width === 0 && r.height === 0) continue;      // collapsed whitespace
       if (prevTop !== null && r.top - prevTop > 1) breaks.push(i - 1);
       prevTop = r.top;
     }
 
-    const bounds = [0, ...breaks, text.length];
+    const bounds = [0, ...breaks, total];
     const frag = document.createDocumentFragment();
     let n = 0;
     for (let i = 0; i < bounds.length - 1; i++) {
-      const chunk = text.slice(bounds[i], bounds[i + 1]).trim();
-      if (!chunk) continue;
+      let a = bounds[i], b = bounds[i + 1];
+      // trim the leading space only. The space that caused the break belongs
+      // to the end of this line, and keeping it is what stops the lines
+      // concatenating into "healthcareat" for anything reading the text.
+      while (a < b && /\s/.test(full[a])) a++;
+      if (a >= b) continue;
+      const [sn, so] = at(a), [en, eo] = at(b);
+      range.setStart(sn, so);
+      range.setEnd(en, eo);
       const outer = document.createElement('span');
       outer.className = 'line';
       outer.style.setProperty('--n', n++);
       const inner = document.createElement('span');
-      inner.textContent = chunk;
+      inner.appendChild(range.cloneContents());
       outer.appendChild(inner);
       frag.appendChild(outer);
     }
@@ -335,8 +362,10 @@
   // webfonts change where lines break, so split only once they have loaded
   (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => {
     splitAll();
-    const hero = document.querySelector('.hero [data-lines]');
-    play(hero);
+    // every block in the hero, not just the first — the subtext opts in too,
+    // and each carries its own delay base so they arrive in order
+    document.querySelectorAll('.hero [data-lines]').forEach(play);
+    play(document.querySelector('.hero__actions'));
     const current = document.querySelector('.slide.is-current [data-lines]');
     play(current);
     window.__playLines = play;

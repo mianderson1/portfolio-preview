@@ -170,6 +170,11 @@
   --motion-line-duration: .62s;
   --motion-line-stagger: 85ms;
   --motion-type-delay: 170ms;
+  /* the hero reveals in order: tagline, then subtext, then the button. These
+     are when the second and third start, measured from the tagline's first
+     line — far enough in that the tagline is clearly leading. */
+  --motion-hero-sub-delay: 380ms;
+  --motion-hero-btn-delay: 620ms;
   --font-size-h4: 24px;
   --font-size-skill: 20.8px;
   --font-size-h6: 38.4px;
@@ -249,6 +254,8 @@
     --motion-line-duration: .78s;
     --motion-line-stagger: 125ms;
     --motion-type-delay: 280ms;
+    --motion-hero-sub-delay: 560ms;   /* the phone's stagger is slower */
+    --motion-hero-btn-delay: 820ms;
     --space-surface-pad: 72px;   /* 150 is desktop breathing room, not phone */
     --font-size-slide: 18px;
     --font-size-body: 18px;

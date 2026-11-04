@@ -202,6 +202,14 @@ a { color: inherit; }
   font-style: italic;
 }
 .hero__actions { margin: 0; }
+/* The subtext and the button follow the tagline. Both stay visible without
+   JS — the hidden state lives only inside the keyframes, and the fill holds
+   it during the delay rather than before the class lands. */
+.hero__currently { --line-delay-base: var(--motion-hero-sub-delay); }
+.hero__actions.is-revealing {
+  animation: line-in var(--motion-line-duration) cubic-bezier(.22,.61,.24,1) both;
+  animation-delay: var(--motion-hero-btn-delay);
+}
 
 .scroll-cue {
   position: absolute; left: 50%; bottom: var(--space-5xl);
@@ -1058,7 +1066,9 @@ a { color: inherit; }
 
 .is-revealing .line > span {
   animation: line-in var(--motion-line-duration) cubic-bezier(.22,.61,.24,1) both;
-  animation-delay: calc(var(--n, 0) * var(--motion-line-stagger));
+  /* the base lets a second block start after the one above it has led */
+  animation-delay: calc(var(--line-delay-base, 0ms)
+                        + var(--n, 0) * var(--motion-line-stagger));
   will-change: opacity, transform;
 }
 @keyframes line-in {
