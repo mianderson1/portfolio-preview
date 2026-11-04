@@ -87,6 +87,16 @@ a { color: inherit; }
 .nav-popover a.is-current,
 .nav-popover a.is-current:hover { background: var(--color-nav-current-bg); }
 
+/* Small size. Lands at 42px tall against the default's 57, so a bar built
+   from them is a third shorter. The avatar variant uses a tighter pad so both
+   shapes come out the same height rather than centring at different sizes. */
+.btn--sm {
+  padding: 10px 18px;
+  font-size: var(--font-size-button-sm);
+}
+.btn--sm.btn--avatar { padding: 6px 6px 6px 16px; }
+.btn--sm .btn__dec { width: 28px; height: 28px; }
+.btn--sm .btn__icon svg { width: 16px; height: 16px; }
 .btn--avatar { padding: 12px 12px 12px 20px; }
 .btn__dec {
   width: 34px; height: 34px; border-radius: 50%;
@@ -166,6 +176,8 @@ a { color: inherit; }
 }
 .hero__currently {
   margin: 0 0 var(--space-2xl);
+  font-size: var(--font-size-hero-support);
+  line-height: 1.25;
   color: var(--color-text-muted);
 }
 .hero__currently em {
@@ -200,7 +212,7 @@ a { color: inherit; }
   top: var(--space-lg); left: 50%;
   transform: translateX(-50%) translateY(-12px);
   display: flex; align-items: center; gap: var(--space-sm);
-  width: max-content; padding: var(--space-md);
+  width: max-content; padding: var(--space-sm) var(--space-sm);
   border-radius: var(--radius-infinite);
   background: rgb(255 255 255 / .80);
   backdrop-filter: blur(20px);

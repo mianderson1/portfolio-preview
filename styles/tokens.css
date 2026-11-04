@@ -176,6 +176,10 @@
   --font-size-label: 16px;
   --font-size-micro: 13.6px;
   --font-size-button: 18px;
+  --font-size-button-sm: 16px;
+  /* the hero's second line. Figma 377:24932 sets it at 33.6 — the same step
+     as H1 — against a 48 hero; it had been inheriting 20.8 body */
+  --font-size-hero-support: 33.6px;
   --font-size-nav: 36px;
   --font-size-burger: 32px;
   --font-size-close: 60px;
@@ -233,6 +237,7 @@
     --motion-type-delay: 280ms;
     --space-surface-pad: 72px;   /* 150 is desktop breathing room, not phone */
     --font-size-slide: 18px;
+    --font-size-hero-support: 24px;   /* 75% of the 32 mobile hero, as desktop */
     --space-stack-heading: 15.6px;
     --layout-viewport: 390px;
     --layout-intro-top: 430px;
