@@ -8,7 +8,7 @@ body {
   font-family: var(--font-family-serif);
   font-weight: var(--font-weight-serif-light);   /* Body/Default = Light */
   font-size: var(--font-size-body);
-  line-height: 1.4;
+  line-height: var(--line-height-body);
   -webkit-font-smoothing: antialiased;
 }
 img, video { display: block; max-width: 100%; }
@@ -45,7 +45,7 @@ a { color: inherit; }
   font-family: var(--font-family-sans);
   font-size: var(--font-size-button);
   font-weight: var(--font-weight-sans-medium);
-  line-height: 1.25;
+  line-height: var(--line-height-ui);
   text-decoration: none;
   border: var(--size-border-width) solid transparent;
   transition: background-color .2s ease, color .2s ease, border-color .2s ease,
@@ -175,12 +175,12 @@ a { color: inherit; }
   /* Figma binds this to font/style/serif-thin — ExtraLight under the
      Substitute mode it renders in, Thin in real Edu Arizona */
   font-weight: var(--font-weight-serif-thin);
-  line-height: 1.2;
+  line-height: var(--line-height-heading);
 }
 .hero__currently {
   margin: 0 0 var(--space-2xl);
   font-size: var(--font-size-hero-support);
-  line-height: 1.25;
+  line-height: var(--line-height-ui);
   color: var(--color-text-muted);
 }
 .hero__currently em {
@@ -349,7 +349,7 @@ a { color: inherit; }
   margin: 0 auto var(--space-5xl);
   font-size: var(--font-size-hero);
   font-weight: var(--font-weight-serif-thin);   /* serif-thin, as the hero */
-  line-height: 1.2;
+  line-height: var(--line-height-heading);
   text-align: center;
 }
 
@@ -368,7 +368,7 @@ a { color: inherit; }
   /* the media is a rounded block inset 16px from the card's bottom and sides,
      so the bottom padding is that inset and the media breaks out of the 40px
      side padding with negative margins */
-  padding: var(--space-card-pad-large) var(--space-card-pad-large) var(--space-card-media-inset);
+  padding: var(--space-card-pad-large) var(--space-card-pad-x) var(--space-card-media-inset);
   border-radius: var(--radius-card-large);
   background: var(--color-bg-page);
 }
@@ -401,13 +401,13 @@ a { color: inherit; }
   margin: 0;
   font-size: var(--font-size-h1);
   font-weight: var(--font-weight-serif-light);   /* Heading/H1 = Light */
-  line-height: 1.2;
+  line-height: var(--line-height-heading);
 }
 .card__frame {
   display: block;
   margin-top: auto;                                /* pin to the card's bottom */
-  margin-inline: calc(var(--space-card-media-inset) - var(--space-card-pad-large));
-  width: calc(100% + 2 * (var(--space-card-pad-large) - var(--space-card-media-inset)));
+  margin-inline: calc(var(--space-card-media-inset) - var(--space-card-pad-x));
+  width: calc(100% + 2 * (var(--space-card-pad-x) - var(--space-card-media-inset)));
   aspect-ratio: 548 / 308;                         /* the exported band */
   border-radius: var(--radius-card);
   overflow: hidden;                                /* so hover scales the art, not the block */
@@ -427,7 +427,7 @@ a { color: inherit; }
 .card__face { margin: 0; transition: opacity .28s ease, visibility .28s; }
 .card__face--back {
   position: absolute;
-  inset: var(--space-card-pad-large) var(--space-card-pad-large)
+  inset: var(--space-card-pad-large) var(--space-card-pad-x)
          var(--space-card-media-inset);
   /* grid rather than block so the copy centres against the full card face */
   display: grid; align-content: center;
@@ -435,7 +435,7 @@ a { color: inherit; }
   font-family: var(--font-family-grotesk);
   font-size: var(--font-size-body);
   font-weight: var(--font-weight-grotesk-light);
-  line-height: 1.5;
+  line-height: var(--line-height-body);
 }
 .card.is-flipped .card__face--front { opacity: 0; visibility: hidden; }
 .card.is-flipped .card__face--back  { opacity: 1; pointer-events: auto; }
@@ -523,8 +523,7 @@ a { color: inherit; }
   font-family: var(--font-family-grotesk);
   font-size: var(--font-size-slide);
   font-weight: var(--font-weight-grotesk-light);
-  /* 1.2 was set for the serif; the grotesk needs more room between lines */
-  line-height: 1.35;
+  line-height: var(--line-height-body);
   /* starts at the top of the slide, as in Figma — the leftover space sits
      under the copy rather than being split around it */
   align-self: start;
@@ -818,7 +817,6 @@ a { color: inherit; }
        show through as a ring */
     border-radius: var(--radius-card) var(--radius-card) 0 0;
     background: var(--color-slide-panel);
-    line-height: 1.5;
   }
 
   /* Arrows straddle the card edge, as they did before the track. The carousel
@@ -988,6 +986,17 @@ a { color: inherit; }
   }
 
   .card-grid { grid-template-columns: minmax(0, 1fr); }
+
+  /* The back copy starts below the eyebrow instead of centring over the whole
+     card. Centred, the longest copy (User Research) reached 5px above the
+     eyebrow's baseline at 390 — the card is sized by its front face, which is
+     much shorter. The eyebrow's own line box is the only measured value here;
+     the rest is the card's existing padding and row gap. */
+  .card__face--back {
+    inset-block-start: calc(var(--space-card-pad-large)
+                            + var(--size-card-eyebrow) + var(--space-lg));
+    align-content: start;
+  }
   .card--wide { width: 100%; }
   .section-heading { font-size: var(--font-size-h1); }
   .sheet { padding-inline: var(--layout-page-margin); }
@@ -1133,7 +1142,7 @@ a { color: inherit; }
   font-family: var(--font-family-sans);
   font-size: 15px;
   font-weight: var(--font-weight-sans-regular);
-  line-height: 1.2;
+  line-height: var(--line-height-body);
 }
 .toast__close {
   flex: none; width: 24px; height: 24px; padding: 4px;

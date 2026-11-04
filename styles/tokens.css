@@ -170,6 +170,12 @@
   --font-size-skill: 20.8px;
   --font-size-h6: 38.4px;
   --font-size-body: 20.8px;
+
+  /* One line-height scale instead of a literal at every call site.
+     Running copy sits at 130% — tighter than the 1.4/1.5 that had crept in. */
+  --line-height-heading: 1.2;
+  --line-height-body: 1.3;
+  --line-height-ui: 1.25;
   --font-size-caption: 16px;
   --font-size-eyebrow: 16px;      /* card eyebrows */
   --font-size-eyebrow-section: 20.8px;
@@ -187,6 +193,10 @@
   --radius-card-large: 36px;        /* skill cards */
   --space-card-media-inset: 16px;
   --space-card-pad-large: 40px;
+  /* the card's side padding, separate from its top: 40 is generous on a phone
+     where the card is only 334 wide */
+  --space-card-pad-x: 40px;
+  --size-card-eyebrow: 22px;   /* the eyebrow's line box, 16px Chivo Mono */
   --space-card-pad-default: 12px;
   --space-card-pad-bottom: 120px;
   --space-card-gap: 24px;
@@ -237,6 +247,8 @@
     --motion-type-delay: 280ms;
     --space-surface-pad: 72px;   /* 150 is desktop breathing room, not phone */
     --font-size-slide: 18px;
+    --font-size-body: 18px;
+    --space-card-pad-x: 20px;
     --font-size-hero-support: 24px;   /* 75% of the 32 mobile hero, as desktop */
     --space-stack-heading: 15.6px;
     --layout-viewport: 390px;
