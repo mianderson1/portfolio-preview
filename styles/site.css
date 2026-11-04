@@ -882,21 +882,36 @@ a { color: inherit; }
 
 
 /* ───────── footer ───────── */
+/* 513:30134 — the meta row on its own. The page already ends on the section
+   surface, so the footer continues it and a hairline across the content
+   column does the separating; the black band is gone. The space above the
+   rule is the About section's own bottom padding. */
 .site-footer {
   position: relative; z-index: 4;
-  background: var(--primitive-black);
-  color: var(--color-text-on-dark);
-  padding: var(--space-5xl) var(--layout-page-margin) var(--space-5xl);
+  background: var(--color-surface-section);
+  color: var(--color-text-primary);
+  padding: 0 var(--layout-page-margin) var(--space-4xl);
 }
 .footer-meta {
   max-width: var(--layout-content-width);
-  margin: 0 auto; display: grid; gap: var(--space-lg);
+  margin: 0 auto;
+  padding-top: var(--space-xl);
+  border-top: var(--size-border-width) solid var(--color-card-border);
+  /* three equal columns on the 1224 column, which is 376 + 48 gaps as drawn */
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3xl);
   font-family: var(--font-family-sans);
-  font-size: var(--font-size-label);
+  font-size: var(--font-size-micro);
 }
-.footer-meta > div { display: flex; justify-content: space-between; gap: var(--space-lg); }
+/* label above value, not label-left value-right */
+.footer-meta > div { display: grid; gap: var(--space-xs); }
 .footer-meta dt { color: var(--color-text-muted); }
-.footer-meta dd { margin: 0; }
+.footer-meta dd { margin: 0; color: var(--color-text-primary); }
+.footer-meta a { color: inherit; text-decoration: none; }
+@media (hover: hover) {
+  .footer-meta a:hover { text-decoration: underline; text-underline-offset: 3px; }
+}
 
 /* ───────── mobile ───────── */
 @media (max-width: 750px) {
@@ -1000,7 +1015,13 @@ a { color: inherit; }
   .card--wide { width: 100%; }
   .section-heading { font-size: var(--font-size-h1); }
   .sheet { padding-inline: var(--layout-page-margin); }
-  .footer-meta > div { flex-direction: column; gap: var(--space-xs); }
+  .footer-meta { grid-template-columns: minmax(0, 1fr); gap: var(--space-lg); }
+  /* the nav is a fixed bottom bar here, so the last row has to clear it.
+     --nav-h is measured in JS, since the bar's height depends on its label. */
+  .site-footer {
+    padding-bottom: calc(var(--space-2xl) + var(--nav-h, 88px)
+                         + env(safe-area-inset-bottom, 0px));
+  }
 }
 
 /* ───────── reduced motion ───────── */
