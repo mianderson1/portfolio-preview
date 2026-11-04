@@ -100,7 +100,10 @@ a { color: inherit; }
 .btn--avatar { padding: 12px 12px 12px 20px; }
 .btn__dec {
   width: 34px; height: 34px; border-radius: 50%;
-  background: #fff url("../source-images/avatar.jpg") center/cover;
+  /* re-cut from the full portrait: the old 240x240 avatar.jpg already had the
+     chin running off its own bottom edge, so no background-position could
+     recover it. This frames the head at ~70% with clearance all round. */
+  background: #fff url("../source-images/avatar-2026.jpg") center/cover;
   flex: none;
 }
 
