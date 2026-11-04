@@ -32,7 +32,9 @@ a { color: inherit; }
   padding: var(--space-md) var(--layout-page-margin);
 }
 .logotype {
-  font-size: var(--font-size-label);
+  /* 20.8, as Figma 377:24977 draws it — it had been on --font-size-label (16),
+     which read a third too small against the hero beneath it */
+  font-size: var(--font-size-body);
   text-decoration: none;
   font-family: var(--font-family-serif);
 }
