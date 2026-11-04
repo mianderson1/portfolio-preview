@@ -182,15 +182,16 @@ a { color: inherit; }
 .hero__currently {
   margin: 0 0 var(--space-2xl);
   font-size: var(--font-size-hero-support);
+  font-weight: var(--font-weight-serif-thin);
   line-height: var(--line-height-ui);
   color: var(--color-text-muted);
 }
-/* Italic again, now that the Light Italic face is shipped. Before it was,
-   asking for italic at 300 fell back to the only italic in /fonts —
-   MediumItalic at 500 — which is why "Currently:" read heavier than its own
-   line. The face now matches the weight exactly. */
+/* Thin italic, matching the roman it sits in. /fonts now carries the italic
+   at 100, 300 and 500, so the weight resolves exactly instead of falling up
+   to the nearest available face — which is what made this read heavy twice
+   before. */
 .hero__currently em {
-  font-weight: var(--font-weight-serif-light);
+  font-weight: var(--font-weight-serif-thin);
   font-style: italic;
 }
 .hero__actions { margin: 0; }
@@ -406,7 +407,7 @@ a { color: inherit; }
 .card__face--front {
   margin: 0;
   font-size: var(--font-size-h1);
-  font-weight: var(--font-weight-serif-light);   /* Heading/H1 = Light */
+  font-weight: var(--font-weight-serif-thin);
   line-height: var(--line-height-heading);
 }
 .card__frame {
