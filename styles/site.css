@@ -183,16 +183,13 @@ a { color: inherit; }
   line-height: var(--line-height-ui);
   color: var(--color-text-muted);
 }
-/* Roman, not italic. The only italic face shipped in /fonts is
-   MediumItalic, so asking for italic at weight 300 fell back to the 500 —
-   which is the heavier "Currently:" that was showing. Edu Arizona does have
-   a Light Italic (Figma binds font/style/serif-light-italic to it); drop the
-   woff2 into /fonts and this can go back to italic at the right weight.
-   font-style: oblique does not help — Chrome declines to synthesise a slant
-   here and renders the roman unchanged. */
+/* Italic again, now that the Light Italic face is shipped. Before it was,
+   asking for italic at 300 fell back to the only italic in /fonts —
+   MediumItalic at 500 — which is why "Currently:" read heavier than its own
+   line. The face now matches the weight exactly. */
 .hero__currently em {
   font-weight: var(--font-weight-serif-light);
-  font-style: normal;
+  font-style: italic;
 }
 .hero__actions { margin: 0; }
 
